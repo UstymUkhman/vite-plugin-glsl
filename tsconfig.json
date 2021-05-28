@@ -14,15 +14,15 @@
     "importHelpers": true,
     "noImplicitAny": true,
     "skipLibCheck": true,
+    "module": "CommonJS",
     "declaration": true,
-    "outDir": "./dist",
 
-    "module": "esnext",
-    "target": "esnext",
+    "outDir": "./dist",
     "sourceMap": true,
     "jsx": "preserve",
     "checkJs": true,
     "allowJs": true,
+    "target": "ES6",
     "baseUrl": ".",
     "strict": true,
 

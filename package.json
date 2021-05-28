@@ -3,8 +3,8 @@
   "description": "Import shader file chunks",
   "author": "Ustym Ukhman <ustym.ukhman@gmail.com>",
   "homepage": "https://github.com/UstymUkhman/vite-plugin-glsl#readme",
-  "main": "src/index.ts",
-  "version": "0.0.1",
+  "main": "dist/index.js",
+  "version": "0.0.3",
   "license": "MIT",
   "private": false,
   "repository": {
