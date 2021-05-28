@@ -1,0 +1,35 @@
+{
+  "name": "vite-plugin-glsl",
+  "description": "Import shader file chunks",
+  "author": "Ustym Ukhman <ustym.ukhman@gmail.com>",
+  "homepage": "https://github.com/UstymUkhman/vite-plugin-glsl#readme",
+  "main": "src/index.ts",
+  "version": "0.0.1",
+  "license": "MIT",
+  "private": false,
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/UstymUkhman/vite-plugin-glsl.git"
+  },
+  "bugs": {
+    "url": "https://github.com/UstymUkhman/vite-plugin-glsl/issues"
+  },
+  "keywords": [
+    "vite",
+    "glsl",
+    "webgl",
+    "plugin",
+    "shader"
+  ],
+  "scripts": {
+    "build": "tsc --build"
+  },
+  "dependencies": {
+    "@rollup/pluginutils": "^4.1.0"
+  },
+  "devDependencies": {
+    "@types/node": "^15.6.1",
+    "typescript": "^4.3.2",
+    "vite": "^2.3.4"
+  }
+}

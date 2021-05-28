@@ -1,0 +1,16 @@
+{
+	"settings": {
+    "js-import.filesToScan": "**/*.{ts,js}",
+		"git.ignoreLimitWarning": true,
+		"js-import.semicolon": true,
+
+		"eslint.validate": [
+      "typescript"
+    ],
+  },
+
+  "folders": [{
+		"name": "Vite Plugin GLSL",
+    "path": "."
+	}]
+}
