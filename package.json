@@ -18,8 +18,13 @@
     "vite",
     "glsl",
     "webgl",
+    "vitejs",
     "plugin",
-    "shader"
+    "shader",
+    "shaders",
+    "vite-plugin",
+    "glsl-shaders",
+    "webgl-shaders"
   ],
   "scripts": {
     "build": "tsc --build"
@@ -31,5 +36,9 @@
     "@types/node": "^15.6.1",
     "typescript": "^4.3.2",
     "vite": "^2.3.4"
+  },
+  "engines": {
+    "node": ">= 14.17.0",
+    "npm": ">= 6.14.13"
   }
 }

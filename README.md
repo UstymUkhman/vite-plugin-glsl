@@ -7,7 +7,7 @@
 ## Installation ##
 
 ```sh
-npm install vite-plugin-glsl --save-dev
+npm i vite-plugin-glsl --save-dev
 # or
 yarn add vite-plugin-glsl --dev
 ```
@@ -142,8 +142,8 @@ void main (void) {
 }
 ```
 
-**Note:** When used with [three.js](https://github.com/mrdoob/three.js) r0.99 and higher, it's possible to include shader chunks as specified in the documentation,
-and those imports will be ignored by `vite-plugin-glsl` since they are handled internally by the library itself:
+**Note:** When used with [three.js](https://github.com/mrdoob/three.js) r0.99 and higher, it's possible to include shader chunks as specified in the [documentation](https://threejs.org/docs/index.html?q=Shader#api/en/materials/ShaderMaterial),
+those imports will be ignored by `vite-plugin-glsl` since they are handled internally by the library itself:
 
 ```glsl
 precision highp float;
