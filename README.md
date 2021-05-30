@@ -2,6 +2,10 @@
 
 > Import shader file chunks
 
+![GitHub repo size](https://img.shields.io/github/repo-size/UstymUkhman/vite-plugin-glsl)
+![GitHub package.json version](https://img.shields.io/github/package-json/v/UstymUkhman/vite-plugin-glsl?color=brightgreen)
+![GitHub](https://img.shields.io/github/license/UstymUkhman/vite-plugin-glsl)
+
 *Inspired by [threejs-glsl-loader](https://github.com/MONOGRID/threejs-glsl-loader#readme) and [vite-plugin-string](https://github.com/aweikalee/vite-plugin-string).*
 
 ## Installation ##
@@ -36,13 +40,12 @@ glsl(
 
 ## What it does ##
 
-Recursively imports and inlines shader chunks
-within `GLSL` files relative to its directory.
+Recursively imports and inlines shader chunks within `GLSL` files relative to their directory.
 
 ### Example ###
 
 ```
-project-folder
+project-root
 ├── src/
 │   ├── glsl/
 │   │   ├── chunk0.frag
@@ -78,7 +81,8 @@ void main (void) {
 ```glsl
 // chunk0.frag
 
-#include utils/chunk1; // vite-plugin-glsl will automatically add ".glsl" extension
+// ".glsl" extension will be added automatically:
+#include utils/chunk1;
 
 highp vec4 chunkFn () {
   return vec4(chunkRGB(), 1.0);
@@ -88,7 +92,6 @@ highp vec4 chunkFn () {
 ```glsl
 // utils/chunk1.glsl
 
-// We're in "utils" directory now
 #include chunk2.frag;
 #include ../chunk3.frag;
 
@@ -142,8 +145,7 @@ void main (void) {
 }
 ```
 
-**Note:** When used with [three.js](https://github.com/mrdoob/three.js) r0.99 and higher, it's possible to include shader chunks as specified in the [documentation](https://threejs.org/docs/index.html?q=Shader#api/en/materials/ShaderMaterial),
-those imports will be ignored by `vite-plugin-glsl` since they are handled internally by the library itself:
+**Note:** When used with [three.js](https://github.com/mrdoob/three.js) r0.99 and higher, it's possible to include shader chunks as specified in the [documentation](https://threejs.org/docs/index.html?q=Shader#api/en/materials/ShaderMaterial), those imports will be ignored by `vite-plugin-glsl` since they are handled internally by the library itself:
 
 ```glsl
 precision highp float;
