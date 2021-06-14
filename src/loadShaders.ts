@@ -8,11 +8,13 @@ import { readFileSync } from 'fs';
  * code in order to avoid including commented chunks
  *
  * @param {string} source Shader source code
+ *
  * @returns {string} Shader source code without comments
  */
 function removeSourceComments (source: string): string {
   if (source.includes('/*') && source.includes('*/')) {
-    source.slice(0, source.indexOf('/*')) + source.slice(source.indexOf('*/') + 2, source.length);
+    source.slice(0, source.indexOf('/*')) +
+    source.slice(source.indexOf('*/') + 2, source.length);
   }
 
   const lines = source.split('\n');
@@ -37,12 +39,15 @@ function removeSourceComments (source: string): string {
  * @returns {string} Shader source code without external chunks
  */
 function loadChunk (source: string, shader: string, directory: string, extension: string): string {
-  source = removeSourceComments(source);
   const include = /#include(\s+([^\s<>]+))/;
+  source = removeSourceComments(source);
 
   if (include.test(source)) {
+    const currentDirectory = directory;
+
     source = source.replace(/#include (.*);/ig, (match: string, chunkPath: string): string => {
       const directoryIndex = chunkPath.trim().lastIndexOf('/');
+      directory = currentDirectory;
 
       if (directoryIndex !== -1) {
         directory = path.resolve(directory, chunkPath.slice(0, directoryIndex + 1));
