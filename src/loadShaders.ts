@@ -19,11 +19,9 @@ function removeSourceComments (source: string): string {
 
   const lines = source.split('\n');
 
-  for (let i = 0; i < lines.length; i++) {
-    if (lines[i].includes('//')) {
-      lines[i] = lines[i].slice(0, lines[i].indexOf('//'));
-    }
-  }
+  for (let l = lines.length; l--;)
+    if (lines[l].includes('//'))
+      lines[l] = lines[l].slice(0, lines[l].indexOf('//'));
 
   return lines.join('\n');
 }
