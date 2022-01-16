@@ -47,15 +47,15 @@ Recursively imports and inlines shader chunks within `GLSL` files relative to th
 ```
 project-root
 ├── src/
-│   ├── glsl/
-│   │   ├── chunk0.frag
-│   │   ├── chunk3.frag
-│   │   ├── main.frag
-│   │   ├── main.vert
-│   │   └── utils/
-│   │       ├── chunk1.glsl
-│   │       └── chunk2.frag
-│   └── main.ts
+│   ├── glsl/
+│   │   ├── chunk0.frag
+│   │   ├── chunk3.frag
+│   │   ├── main.frag
+│   │   ├── main.vert
+│   │   └── utils/
+│   │       ├── chunk1.glsl
+│   │       └── chunk2.frag
+│   └── main.ts
 ├── vite.config.js
 └── package.json
 ```
@@ -142,6 +142,26 @@ out highp vec4 fragColor;
 
 void main (void) {
   fragColor = chunkFn();
+}
+```
+
+## Release Updates ##
+
+- Starting from `v0.0.7` this plugin supports optional single and double quotation marks around file names.
+
+### Example ###
+
+```glsl
+// main.frag
+precision highp float;
+
+#include 'chunk3.frag';
+#include "utils/chunk2.frag";
+
+out highp vec4 fragColor;
+
+void main (void) {
+  fragColor = vec4(chunkRed(), chunkGreen(), 0.0, 1.0);
 }
 ```
 
