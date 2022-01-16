@@ -1,14 +1,15 @@
 /**
  * @module vite-plugin-glsl
- * @description Vite plugin for in-shader imports
+ * @description Import shader file chunks
  * @author Ustym Ukhman <ustym.ukhman@gmail.com>
- * @version 0.0.5
+ * @version 0.0.6
  * @license MIT
  */
 
 import type { Plugin } from 'vite';
 import loadShaders from './loadShaders';
-import { createFilter, dataToEsm, FilterPattern } from '@rollup/pluginutils';
+import type { FilterPattern } from '@rollup/pluginutils';
+import { createFilter, dataToEsm } from '@rollup/pluginutils';
 
 /**
  * @const

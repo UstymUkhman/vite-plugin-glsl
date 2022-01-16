@@ -7,9 +7,9 @@ import { readFileSync } from 'fs';
  * @description Removes comments from shader source
  * code in order to avoid including commented chunks
  *
- * @param {string} source Shader source code
+ * @param {string} source Shader's source code
  *
- * @returns {string} Shader source code without comments
+ * @returns {string} Shader's source code without comments
  */
 function removeSourceComments (source: string): string {
   if (source.includes('/*') && source.includes('*/')) {
@@ -32,21 +32,23 @@ function removeSourceComments (source: string): string {
  * @function
  * @name loadChunk
  *
- * @param {string} source Shader source code
- * @param {string} shader Shader filename full path
+ * @param {string} source Shader's source code
+ * @param {string} directory Shader's directory name
  * @param {string} extension Default shader extension
  *
- * @returns {string} Shader source code without external chunks
+ * @returns {string} Shader's source code without external chunks
  */
-function loadChunk (source: string, shader: string, directory: string, extension: string): string {
+function loadChunk (source: string, directory: string, extension: string): string {
   const include = /#include(\s+([^\s<>]+))/;
   source = removeSourceComments(source);
 
   if (include.test(source)) {
     const currentDirectory = directory;
 
-    source = source.replace(/#include (.*);/ig, (match: string, chunkPath: string): string => {
-      const directoryIndex = chunkPath.trim().lastIndexOf('/');
+    source = source.replace(/#include (.*);/gi, (_, chunkPath: string): string => {
+      chunkPath = chunkPath.trim().replace(/^(?:"|')?|(?:"|')?$/gi, '');
+
+      const directoryIndex = chunkPath.lastIndexOf('/');
       directory = currentDirectory;
 
       if (directoryIndex !== -1) {
@@ -54,14 +56,14 @@ function loadChunk (source: string, shader: string, directory: string, extension
         chunkPath = chunkPath.slice(directoryIndex + 1, chunkPath.length);
       }
 
-      shader = path.resolve(directory, chunkPath);
+      let shader = path.resolve(directory, chunkPath);
 
       if (!path.extname(shader)) {
         shader = `${shader}.${extension}`;
       }
 
       return loadChunk(
-        readFileSync(shader, 'utf8'), shader,
+        readFileSync(shader, 'utf8'),
         path.dirname(shader), extension
       );
     });
@@ -74,12 +76,12 @@ function loadChunk (source: string, shader: string, directory: string, extension
  * @function
  * @name loadShaders
  *
- * @param {string} source Shader source code
- * @param {string} shader Shader file to load
+ * @param {string} source Shader's source code
+ * @param {string} shader Shader's absolute path
  * @param {string} extension Default shader extension
  *
  * @returns {string} Shader file with included chunks
  */
 export default function (source: string, shader: string, extension: string): string {
-  return loadChunk(source, shader, path.dirname(shader), extension);
+  return loadChunk(source, path.dirname(shader), extension);
 }
