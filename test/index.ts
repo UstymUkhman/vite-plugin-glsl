@@ -1,4 +1,6 @@
 /// <reference types="./shaders" />
 import shader from './glsl/main.frag';
 
-console.info(shader);
+const app = document.getElementById('app');
+app.style.whiteSpace = 'pre-wrap';
+app.textContent = shader;

@@ -149,14 +149,16 @@ void main (void) {
 
 - Starting from `v0.0.7` this plugin supports optional single and double quotation marks around file names.
 
+- Starting from `v0.0.9` this plugin supports optional semicolons at the end of `#include` statements.
+
 ### Example ###
 
 ```glsl
 // main.frag
 precision highp float;
 
-#include 'chunk3.frag';
-#include "utils/chunk2.frag";
+#include 'chunk3.frag'
+#include "utils/chunk2.frag"
 
 out highp vec4 fragColor;
 

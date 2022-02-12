@@ -43,8 +43,8 @@ function loadChunk (source: string, directory: string, extension: string): strin
   if (include.test(source)) {
     const currentDirectory = directory;
 
-    source = source.replace(/#include (.*);/gi, (_, chunkPath: string): string => {
-      chunkPath = chunkPath.trim().replace(/^(?:"|')?|(?:"|')?$/gi, '');
+    source = source.replace(/#include (.*);?/gi, (_, chunkPath: string): string => {
+      chunkPath = chunkPath.trim().replace(/^(?:"|')?|(?:"|')?;?$/gi, '');
 
       const directoryIndex = chunkPath.lastIndexOf('/');
       directory = currentDirectory;
