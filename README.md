@@ -32,9 +32,9 @@ export default defineConfig({
 
 ```ts
 glsl(
-  exclude = undefined,                    // RegExp | RegExp[] of file paths/extentions to ignore
-  include = /\.(vs|fs|vert|frag|glsl)$/i, // RegExp | RegExp[] of file paths/extentions to import
-  defaultExtension = 'glsl'               // Shader import suffix when no extension is specified
+  exclude = undefined,                         // RegExp | RegExp[] of file paths/extentions to ignore
+  include = /\.(glsl|wgsl|vert|frag|vs|fs)$/i, // RegExp | RegExp[] of file paths/extentions to import
+  defaultExtension = 'glsl'                    // Shader import suffix when no extension is specified
 )
 ```
 
@@ -150,6 +150,8 @@ void main (void) {
 - Starting from `v0.0.7` this plugin supports optional single and double quotation marks around file names.
 
 - Starting from `v0.0.9` this plugin supports optional semicolons at the end of `#include` statements.
+
+- Starting from `v0.1.0` this plugin supports WebGPU shaders with `.wgsl` extention.
 
 ### Example ###
 

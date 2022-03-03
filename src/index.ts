@@ -2,7 +2,7 @@
  * @module vite-plugin-glsl
  * @description Import shader file chunks
  * @author Ustym Ukhman <ustym.ukhman@gmail.com>
- * @version 0.0.9
+ * @version 0.1.0
  * @license MIT
  */
 
@@ -24,9 +24,9 @@ import { createFilter, dataToEsm } from '@rollup/pluginutils';
  * @type {readonly RegExp[]}
  */
 const DEFAULT_SHADERS = Object.freeze([
-  '**/*.vert', '**/*.frag',
-  '**/*.vs', '**/*.fs',
   '**/*.glsl', '**/*.wgsl',
+  '**/*.vert', '**/*.frag',
+  '**/*.vs', '**/*.fs'
 ]);
 
 /**
@@ -39,7 +39,7 @@ const DEFAULT_SHADERS = Object.freeze([
  *
  * @default
  *   exclude = undefined
- *   include = /\.(vs|fs|vert|frag|glsl)$/i
+ *   include = /\.(glsl|wgsl|vert|frag|vs|fs)$/i
  *   defaultExtension = 'glsl'
  *
  * @returns {Plugin}

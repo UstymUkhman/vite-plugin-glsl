@@ -4,7 +4,7 @@
   "author": "Ustym Ukhman <ustym.ukhman@gmail.com>",
   "homepage": "https://github.com/UstymUkhman/vite-plugin-glsl#readme",
   "main": "dist/index.js",
-  "version": "0.0.9",
+  "version": "0.1.0",
   "license": "MIT",
   "private": false,
   "repository": {
@@ -18,13 +18,14 @@
     "vite",
     "glsl",
     "webgl",
+    "webgpu",
     "vitejs",
     "plugin",
-    "shader",
     "shaders",
     "vite-plugin",
     "glsl-shaders",
-    "webgl-shaders"
+    "webgl-shaders",
+    "webgpu-shaders"
   ],
   "scripts": {
     "test": "vite",
