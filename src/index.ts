@@ -26,7 +26,7 @@ import { createFilter, dataToEsm } from '@rollup/pluginutils';
 const DEFAULT_SHADERS = Object.freeze([
   '**/*.vert', '**/*.frag',
   '**/*.vs', '**/*.fs',
-  '**/*.glsl'
+  '**/*.glsl', '**/*.wgsl',
 ]);
 
 /**
