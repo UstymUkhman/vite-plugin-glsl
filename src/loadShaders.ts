@@ -37,13 +37,13 @@ function removeSourceComments (source: string): string {
  * @returns {string} Shader's source code without external chunks
  */
 function loadChunk (source: string, directory: string, extension: string): string {
-  const include = /#include(\s+([^\s<>]+))/;
+  const include = /#include(\s+([^\s<>]+));?/gi;
   source = removeSourceComments(source);
 
   if (include.test(source)) {
     const currentDirectory = directory;
 
-    source = source.replace(/#include (.*);?/gi, (_, chunkPath: string): string => {
+    source = source.replace(include, (_, chunkPath: string): string => {
       chunkPath = chunkPath.trim().replace(/^(?:"|')?|(?:"|')?;?$/gi, '');
 
       const directoryIndex = chunkPath.lastIndexOf('/');
