@@ -1,0 +1,9 @@
+src/
+test/
+node_modules/
+
+index.html
+favicon.svg
+tsconfig.json
+vite.config.ts
+vite-plugin-glsl.code-workspace
