@@ -1,0 +1,40 @@
+{
+  "compilerOptions": {
+    "forceConsistentCasingInFileNames": true,
+    "allowSyntheticDefaultImports": true,
+    "importsNotUsedAsValues": "error",
+    "noUnusedParameters": false,
+    "moduleResolution": "node",
+
+    "resolveJsonModule": true,
+    "strictNullChecks": true,
+    "esModuleInterop": true,
+    "isolatedModules": true,
+    "noUnusedLocals": true,
+    "importHelpers": true,
+    "noImplicitAny": true,
+    "skipLibCheck": true,
+    "module": "CommonJS",
+    "declaration": true,
+
+    "outDir": "./dist",
+    "sourceMap": true,
+    "jsx": "preserve",
+    "checkJs": true,
+    "allowJs": true,
+    "target": "ES6",
+    "baseUrl": ".",
+    "strict": true,
+
+    "typeRoots": [
+      "node_modules/@types"
+    ],
+
+    "types": [
+      "node"
+    ]
+  },
+
+  "include": ["src/**/*.ts"],
+  "exclude": ["node_modules"]
+}
