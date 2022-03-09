@@ -6,10 +6,11 @@
  * @license MIT
  */
 
-import type { Plugin } from 'vite';
+import type { Plugin, ResolvedConfig } from 'vite';
 import loadShaders from './loadShaders';
 import type { FilterPattern } from '@rollup/pluginutils';
 import { createFilter, dataToEsm } from '@rollup/pluginutils';
+import MagicString from 'magic-string';
 
 /**
  * @const
@@ -51,15 +52,26 @@ export default function (
 ): Plugin {
   const filter = createFilter(include, exclude);
 
+  let config: ResolvedConfig
+
   return {
     enforce: 'pre',
     name: 'vite-plugin-glsl',
 
+    configResolved(resolvedConfig) {
+      config = resolvedConfig
+    },
+
     transform (source, shader) {
       if (filter(shader)) {
-        return dataToEsm(loadShaders(
+        const code = new MagicString(dataToEsm(loadShaders(
           source, shader, defaultExtension
-        ));
+        )));
+
+        return {
+          code: code.toString(),
+          map: config.build.sourcemap ? code.generateMap({ hires: true }) : null
+        };
       }
     }
   };
