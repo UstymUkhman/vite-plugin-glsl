@@ -4,7 +4,7 @@
   "author": "Ustym Ukhman <ustym.ukhman@gmail.com>",
   "homepage": "https://github.com/UstymUkhman/vite-plugin-glsl#readme",
   "main": "dist/index.js",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "license": "MIT",
   "private": false,
   "repository": {
@@ -33,7 +33,6 @@
   },
   "dependencies": {
     "@rollup/pluginutils": "^4.1.2",
-    "magic-string": "^0.26.1",
     "tslib": "^2.3.1"
   },
   "devDependencies": {

@@ -2,15 +2,16 @@
  * @module vite-plugin-glsl
  * @description Import shader file chunks
  * @author Ustym Ukhman <ustym.ukhman@gmail.com>
- * @version 0.1.1
+ * @version 0.1.2
  * @license MIT
  */
 
-import type { Plugin, ResolvedConfig } from 'vite';
-import loadShaders from './loadShaders';
 import type { FilterPattern } from '@rollup/pluginutils';
-import { createFilter, dataToEsm } from '@rollup/pluginutils';
-import MagicString from 'magic-string';
+import type { Plugin, ResolvedConfig } from 'vite';
+
+import { createFilter } from '@rollup/pluginutils';
+import { transformWithEsbuild } from 'vite';
+import loadShaders from './loadShaders';
 
 /**
  * @const
@@ -50,28 +51,29 @@ export default function (
   include: FilterPattern = DEFAULT_SHADERS,
   defaultExtension = DEFAULT_EXTENSION
 ): Plugin {
-  const filter = createFilter(include, exclude);
+  let config: ResolvedConfig;
 
-  let config: ResolvedConfig
+  const filter = createFilter(include, exclude);
+  const production = process.env.NODE_ENV === 'production';
 
   return {
     enforce: 'pre',
     name: 'vite-plugin-glsl',
 
-    configResolved(resolvedConfig) {
-      config = resolvedConfig
+    configResolved (resolvedConfig) {
+      config = resolvedConfig;
     },
 
-    transform (source, shader) {
+    async transform (source, shader) {
       if (filter(shader)) {
-        const code = new MagicString(dataToEsm(loadShaders(
-          source, shader, defaultExtension
-        )));
-
-        return {
-          code: code.toString(),
-          map: config.build.sourcemap ? code.generateMap({ hires: true }) : null
-        };
+        return await transformWithEsbuild(
+          loadShaders(source, shader, defaultExtension), shader, {
+            sourcemap: config.build.sourcemap && 'external',
+            minifyWhitespace: production,
+            loader: 'text',
+            format: 'esm'
+          }
+        );
       }
     }
   };

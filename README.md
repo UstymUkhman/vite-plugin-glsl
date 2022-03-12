@@ -153,6 +153,8 @@ void main (void) {
 
 - Starting from `v0.1.0` this plugin supports WebGPU shaders with `.wgsl` extention.
 
+- Starting from `v0.1.2` this plugin generates sourcemaps using vite esbuild when the `sourcemap` [option](https://github.com/UstymUkhman/vite-plugin-glsl/blob/main/vite.config.ts#L5) is set to `true`.
+
 ### Example ###
 
 ```glsl
