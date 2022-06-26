@@ -33,13 +33,13 @@
     "build": "tsc --build"
   },
   "dependencies": {
-    "@rollup/pluginutils": "^4.1.2",
-    "tslib": "^2.3.1"
+    "@rollup/pluginutils": "^4.2.1",
+    "tslib": "^2.4.0"
   },
   "devDependencies": {
-    "@types/node": "^17.0.8",
-    "typescript": "^4.5.4",
-    "vite": "^2.7.12"
+    "@types/node": "^18.0.0",
+    "typescript": "^4.7.4",
+    "vite": "^2.9.12"
   },
   "engines": {
     "node": ">= 14.17.0",

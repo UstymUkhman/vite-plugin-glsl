@@ -54,7 +54,7 @@ function removeSourceComments (source: string): string {
  * @param {string} path Shader's absolute path
  *
  * @returns {string | false} Chunk path caused a recursion
- * of `false` if there were no import recursion
+ * or `false` if there were no import recursion
  */
  function checkRecursiveImport (path: string): string | false {
   const recursion = shaderChunks.includes(path);
