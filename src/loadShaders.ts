@@ -1,5 +1,25 @@
-import path from 'path';
+import { dirname, resolve, extname, posix, sep } from 'path';
 import { readFileSync } from 'fs';
+
+/**
+ * @const
+ * @type {string[]}
+ * @name shaderChunks
+ * 
+ * @description List of shader chunks, it's used to
+ * track included files in order to avoid recursion
+ */
+const shaderChunks: string[] = [];
+
+/**
+ * @const
+ * @name include
+ * @type {readonly RegExp}
+ * 
+ * @description RegExp to match GLSL
+ * `#include` preprocessor instruction
+ */
+const include = /#include(\s+([^\s<>]+));?/gi;
 
 /**
  * @function
@@ -28,17 +48,42 @@ function removeSourceComments (source: string): string {
 
 /**
  * @function
+ * @name checkRecursiveImport
+ * @description Checks if a shader chunk was already included
+ *
+ * @param {string} path Shader's absolute path
+ *
+ * @returns {string | false} Chunk path caused a recursion
+ * of `false` if there were no import recursion
+ */
+ function checkRecursiveImport (path: string): string | false {
+  const recursion = shaderChunks.includes(path);
+  const caller = shaderChunks.at(-1) as string;
+  recursion && shaderChunks.splice(0);
+  return recursion && caller;
+}
+
+/**
+ * @function
  * @name loadChunk
  *
- * @param {string} source Shader's source code
- * @param {string} directory Shader's directory name
+ * @param {string} source    Shader's source code
+ * @param {string} path      Shader's absolute path
  * @param {string} extension Default shader extension
  *
  * @returns {string} Shader's source code without external chunks
  */
-function loadChunk (source: string, directory: string, extension: string): string {
-  const include = /#include(\s+([^\s<>]+));?/gi;
+function loadChunk (source: string, path: string, extension: string): string {
+  const unixPath = path.split(sep).join(posix.sep);
+  const recursiveChunk = checkRecursiveImport(unixPath);
+
+  if (recursiveChunk) {
+    throw Error(`recursion detected when importing '${unixPath}' in '${recursiveChunk}'.`);
+  }
+
   source = removeSourceComments(source);
+  let directory = dirname(unixPath);
+  shaderChunks.push(unixPath);
 
   if (include.test(source)) {
     const currentDirectory = directory;
@@ -50,19 +95,19 @@ function loadChunk (source: string, directory: string, extension: string): strin
       directory = currentDirectory;
 
       if (directoryIndex !== -1) {
-        directory = path.resolve(directory, chunkPath.slice(0, directoryIndex + 1));
+        directory = resolve(directory, chunkPath.slice(0, directoryIndex + 1));
         chunkPath = chunkPath.slice(directoryIndex + 1, chunkPath.length);
       }
 
-      let shader = path.resolve(directory, chunkPath);
+      let shader = resolve(directory, chunkPath);
 
-      if (!path.extname(shader)) {
+      if (!extname(shader)) {
         shader = `${shader}.${extension}`;
       }
 
       return loadChunk(
         readFileSync(shader, 'utf8'),
-        path.dirname(shader), extension
+        shader, extension
       );
     });
   }
@@ -74,12 +119,12 @@ function loadChunk (source: string, directory: string, extension: string): strin
  * @function
  * @name loadShaders
  *
- * @param {string} source Shader's source code
- * @param {string} shader Shader's absolute path
+ * @param {string} source    Shader's source code
+ * @param {string} shader    Shader's absolute path
  * @param {string} extension Default shader extension
  *
  * @returns {string} Shader file with included chunks
  */
 export default function (source: string, shader: string, extension: string): string {
-  return loadChunk(source, path.dirname(shader), extension);
+  return loadChunk(source, shader, extension);
 }

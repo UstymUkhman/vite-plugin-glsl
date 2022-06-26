@@ -2,7 +2,7 @@
  * @module vite-plugin-glsl
  * @description Import shader file chunks
  * @author Ustym Ukhman <ustym.ukhman@gmail.com>
- * @version 0.1.2
+ * @version 0.1.3
  * @license MIT
  */
 
@@ -35,8 +35,8 @@ const DEFAULT_SHADERS = Object.freeze([
  * @function
  * @name glsl
  *
- * @param {FilterPattern} exclude RegExp | RegExp[] of file paths/extentions to ignore
- * @param {FilterPattern} include RegExp | RegExp[] of file paths/extentions to import
+ * @param {FilterPattern} exclude   RegExp | RegExp[] of file paths/extentions to ignore
+ * @param {FilterPattern} include   RegExp | RegExp[] of file paths/extentions to import
  * @param {string} defaultExtension Shader import suffix when no extension is specified
  *
  * @default

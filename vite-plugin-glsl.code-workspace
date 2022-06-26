@@ -1,5 +1,6 @@
 {
 	"settings": {
+    "editor.bracketPairColorization.enabled": false,
     "js-import.filesToScan": "**/*.{ts,js}",
 		"git.ignoreLimitWarning": true,
 		"js-import.semicolon": true,
