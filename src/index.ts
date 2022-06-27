@@ -2,7 +2,7 @@
  * @module vite-plugin-glsl
  * @description Import shader file chunks
  * @author Ustym Ukhman <ustym.ukhman@gmail.com>
- * @version 0.1.3
+ * @version 0.1.5
  * @license MIT
  */
 

@@ -155,6 +155,8 @@ void main (void) {
 
 - Starting from `v0.1.2` this plugin generates sourcemaps using vite esbuild when the `sourcemap` [option](https://github.com/UstymUkhman/vite-plugin-glsl/blob/main/vite.config.ts#L5) is set to `true`.
 
+- Starting from `v0.1.5` this plugin warns about multiple imports of the same chunks and throws an error when a recursive loop occurres.
+
 ### Example ###
 
 ```glsl

@@ -1,5 +1,15 @@
 import { dirname, resolve, extname, posix, sep } from 'path';
+import { emitWarning } from 'process';
 import { readFileSync } from 'fs';
+
+/**
+ * @type {string}
+ * @name lastCaller
+ * 
+ * @description Last shader's absolute
+ * path to include a new chunk
+ */
+let lastCaller = '';
 
 /**
  * @const
@@ -48,7 +58,7 @@ function removeSourceComments (source: string): string {
 
 /**
  * @function
- * @name checkRecursiveImport
+ * @name checkRecursiveImports
  * @description Checks if a shader chunk was already included
  *
  * @param {string} path Shader's absolute path
@@ -56,11 +66,45 @@ function removeSourceComments (source: string): string {
  * @returns {string | false} Chunk path caused a recursion
  * or `false` if there were no import recursion
  */
- function checkRecursiveImport (path: string): string | false {
+ function checkRecursiveImports (path: string): string | false {
   const recursion = shaderChunks.includes(path);
   const caller = shaderChunks.at(-1) as string;
-  recursion && shaderChunks.splice(0);
-  return recursion && caller;
+
+  if (!recursion) {
+    lastCaller = caller;
+    return false;
+  }
+
+  if (checkMultipleImports(path, caller)) {
+    return false;
+  }
+
+  shaderChunks.splice(0);
+  return caller;
+}
+
+/**
+ * @function
+ * @name checkMultipleImports
+ * @description Checks if a shader chunk was already included
+ *
+ * @param {string} path   Shader's absolute path
+ * @param {string} caller Chunk path who called `#include`
+ *
+ * @returns {boolean} Chunk import has already occurred
+ */
+function checkMultipleImports (path: string, caller: string): boolean {
+  const sameCaller = path === lastCaller;
+  if (!sameCaller) return false;
+
+  emitWarning(`'${path}' was included multiple times.`, {
+    code: 'vite-plugin-glsl',
+    detail: 'Please avoid multiple imports of the same chunk in order to' +
+    ` avoid unwanted recursions. Last import found in file '${caller}'.`
+  });
+
+  lastCaller = caller;
+  return true;
 }
 
 /**
@@ -71,14 +115,15 @@ function removeSourceComments (source: string): string {
  * @param {string} path      Shader's absolute path
  * @param {string} extension Default shader extension
  *
+ * @throws  {Error}  If import recursion was detected
  * @returns {string} Shader's source code without external chunks
  */
 function loadChunk (source: string, path: string, extension: string): string {
   const unixPath = path.split(sep).join(posix.sep);
-  const recursiveChunk = checkRecursiveImport(unixPath);
+  const recursiveChunk = checkRecursiveImports(unixPath);
 
   if (recursiveChunk) {
-    throw Error(`recursion detected when importing '${unixPath}' in '${recursiveChunk}'.`);
+    throw Error(`Recursion detected when importing '${unixPath}' in '${recursiveChunk}'.`);
   }
 
   source = removeSourceComments(source);

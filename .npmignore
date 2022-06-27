@@ -1,11 +1,8 @@
-src/
-test/
-dist/assets/
-node_modules/
-
+src
+test
 index.html
 favicon.svg
+node_modules
 tsconfig.json
 vite.config.ts
-dist/index.html
 vite-plugin-glsl.code-workspace
