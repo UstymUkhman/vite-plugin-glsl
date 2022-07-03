@@ -6,7 +6,7 @@
 ![GitHub package.json version](https://img.shields.io/github/package-json/v/UstymUkhman/vite-plugin-glsl?color=brightgreen)
 ![GitHub](https://img.shields.io/github/license/UstymUkhman/vite-plugin-glsl)
 
-*Inspired by [threejs-glsl-loader](https://github.com/MONOGRID/threejs-glsl-loader#readme) and [vite-plugin-string](https://github.com/aweikalee/vite-plugin-string).*
+*Inspired by [threejs-glsl-loader](https://github.com/MONOGRID/threejs-glsl-loader#readme) and [vite-plugin-string](https://github.com/aweikalee/vite-plugin-string), compatible with [three.js](https://threejs.org/) and [lygia](https://github.com/patriciogonzalezvivo/lygia).*
 
 ## Installation ##
 
@@ -31,21 +31,22 @@ export default defineConfig({
 ## Default Options ##
 
 ```ts
-glsl(
-  exclude = undefined,                         // RegExp | RegExp[] of file paths/extentions to ignore
-  include = /\.(glsl|wgsl|vert|frag|vs|fs)$/i, // RegExp | RegExp[] of file paths/extentions to import
-  defaultExtension = 'glsl'                    // Shader import suffix when no extension is specified
-)
+glsl({
+  exclude = undefined,                         // {FilterPattern | undefined} - File paths/extensions to ignore
+  include = /\.(glsl|wgsl|vert|frag|vs|fs)$/i, // {FilterPattern | undefined} - File paths/extensions to import
+  defaultExtension = 'glsl',                   // {string        | undefined} - Shader suffix when no extension is specified
+  warnDuplicatedImports = true                 // {boolean       | undefined} - Warn if the same chunk was imported multiple times
+})
 ```
 
 ## What it does ##
 
-Recursively imports and inlines shader chunks within `GLSL` files relative to their directory.
+Imports and inlines shader chunks within `GLSL` files relative to their directory.
 
 ### Example ###
 
 ```
-project-root
+root
 ├── src/
 │   ├── glsl/
 │   │   ├── chunk0.frag
@@ -145,33 +146,19 @@ void main (void) {
 }
 ```
 
-## Release Updates ##
+## Change Log ##
 
 - Starting from `v0.0.7` this plugin supports optional single and double quotation marks around file names.
 
 - Starting from `v0.0.9` this plugin supports optional semicolons at the end of `#include` statements.
 
-- Starting from `v0.1.0` this plugin supports WebGPU shaders with `.wgsl` extention.
+- Starting from `v0.1.0` this plugin supports WebGPU shaders with `.wgsl` extension.
 
 - Starting from `v0.1.2` this plugin generates sourcemaps using vite esbuild when the `sourcemap` [option](https://github.com/UstymUkhman/vite-plugin-glsl/blob/main/vite.config.ts#L5) is set to `true`.
 
-- Starting from `v0.1.5` this plugin warns about multiple imports of the same chunks and throws an error when a recursive loop occurres.
+- Starting from `v0.1.5` this plugin warns about duplicated chunks imports and throws an error when a recursive loop occurres.
 
-### Example ###
-
-```glsl
-// main.frag
-precision highp float;
-
-#include 'chunk3.frag'
-#include "utils/chunk2.frag"
-
-out highp vec4 fragColor;
-
-void main (void) {
-  fragColor = vec4(chunkRed(), chunkGreen(), 0.0, 1.0);
-}
-```
+- Starting from `v0.2.0` this plugin uses a config object as a single argument to `glsl` function and allows to disable import warnings with the `warnDuplicatedImports` param set to `false`.
 
 **Note:** When used with [three.js](https://github.com/mrdoob/three.js) r0.99 and higher, it's possible to include shader chunks as specified in the [documentation](https://threejs.org/docs/index.html?q=Shader#api/en/materials/ShaderMaterial), those imports will be ignored by `vite-plugin-glsl` since they are handled internally by the library itself:
 

@@ -2,7 +2,7 @@
  * @module vite-plugin-glsl
  * @description Import shader file chunks
  * @author Ustym Ukhman <ustym.ukhman@gmail.com>
- * @version 0.1.5
+ * @version 0.2.0
  * @license MIT
  */
 
@@ -11,18 +11,20 @@ import type { Plugin, ResolvedConfig } from 'vite';
 
 import { createFilter } from '@rollup/pluginutils';
 import { transformWithEsbuild } from 'vite';
-import loadShaders from './loadShaders';
+import loadShader from './loadShader';
 
 /**
  * @const
  * @default
+ * @readonly
  * @type {string}
  */
- const DEFAULT_EXTENSION = 'glsl';
+const DEFAULT_EXTENSION = 'glsl';
 
 /**
  * @const
  * @default
+ * @readonly
  * @type {readonly RegExp[]}
  */
 const DEFAULT_SHADERS = Object.freeze([
@@ -32,27 +34,47 @@ const DEFAULT_SHADERS = Object.freeze([
 ]);
 
 /**
+ * @type {Object}
+ * @name PluginOptions
+ * 
+ * @property {FilterPattern} exclude         - File paths/extensions to ignore
+ * @property {FilterPattern} include         - File paths/extensions to import
+ * @property {string} defaultExtension       - Shader suffix when no extension is specified
+ * @property {boolean} warnDuplicatedImports - Warn if the same chunk was imported multiple times
+ * 
+ * @default
+ * {
+ *   exclude: undefined,
+ *   include: DEFAULT_SHADERS,
+ *   defaultExtension: DEFAULT_EXTENSION,
+ *   warnDuplicatedImports: true
+ * }
+ */
+type PluginOptions = {
+  exclude?: FilterPattern;
+  include?: FilterPattern;
+  defaultExtension?: string;
+  warnDuplicatedImports?: boolean;
+};
+
+/**
  * @function
  * @name glsl
  *
- * @param {FilterPattern} exclude   RegExp | RegExp[] of file paths/extentions to ignore
- * @param {FilterPattern} include   RegExp | RegExp[] of file paths/extentions to import
- * @param {string} defaultExtension Shader import suffix when no extension is specified
- *
- * @default
- *   exclude = undefined
- *   include = /\.(glsl|wgsl|vert|frag|vs|fs)$/i
- *   defaultExtension = 'glsl'
- *
- * @returns {Plugin}
+ * @param {PluginOptions} options Plugin config object
+ * 
+ * @returns {Plugin} Vite plugin that converts shader code
  */
 export default function (
-  exclude?: FilterPattern,
-  include: FilterPattern = DEFAULT_SHADERS,
-  defaultExtension = DEFAULT_EXTENSION
-): Plugin {
+  {
+    exclude = undefined,
+    include = DEFAULT_SHADERS,
+    defaultExtension = DEFAULT_EXTENSION,
+    warnDuplicatedImports = true
+  }: PluginOptions = {}
+): Plugin
+{
   let config: ResolvedConfig;
-
   const filter = createFilter(include, exclude);
   const production = process.env.NODE_ENV === 'production';
 
@@ -65,16 +87,14 @@ export default function (
     },
 
     async transform (source, shader) {
-      if (filter(shader)) {
-        return await transformWithEsbuild(
-          loadShaders(source, shader, defaultExtension), shader, {
-            sourcemap: config.build.sourcemap && 'external',
-            minifyWhitespace: production,
-            loader: 'text',
-            format: 'esm'
-          }
-        );
-      }
+      if (filter(shader)) return await transformWithEsbuild(
+        loadShader(source, shader, defaultExtension, warnDuplicatedImports), shader, {
+          sourcemap: config.build.sourcemap && 'external',
+          minifyWhitespace: production,
+          loader: 'text',
+          format: 'esm'
+        }
+      );
     }
   };
 }
