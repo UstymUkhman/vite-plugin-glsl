@@ -1,4 +1,5 @@
 import { dirname, resolve, extname, posix, sep } from 'path';
+import type { LoadingOptions } from './types.d';
 import { emitWarning } from 'process';
 import { readFileSync } from 'fs';
 
@@ -130,11 +131,47 @@ function removeSourceComments (source: string): string {
 
   const lines = source.split('\n');
 
-  for (let l = lines.length; l--;)
-    if (lines[l].includes('//'))
+  for (let l = lines.length; l--; ) {
+    if (lines[l].includes('//')) {
       lines[l] = lines[l].slice(0, lines[l].indexOf('//'));
+    }
+  }
 
   return lines.join('\n');
+}
+
+/**
+ * @function
+ * @name comressShader
+ * @description Compresses shader source code by
+ * removing unnecessary whitespace and empty lines
+ * 
+ * @param {string} shader   Shader code with included chunks
+ * @param {boolean} newLine Flag to require a new line for the code
+ * 
+ * @returns {string} Compressed shader's source code
+ */
+function comressShader (shader: string, newLine = false): string {
+  return shader.replace(/\\(?:\r\n|\n\r|\n|\r)|\/\*.*?\*\/|\/\/(?:\\(?:\r\n|\n\r|\n|\r)|[^\n\r])*/g, '')
+    .split(/\n+/).reduce((result: string[], line: string): string[] => {
+      line = line.trim().replace(/\s{2,}|\t/, ' ');
+
+      if (line[0] === '#') {
+        newLine && result.push('\n');
+        result.push(line, '\n');
+        newLine = false;
+      }
+
+      else {
+        !line.startsWith('{') && result.length && result[result.length - 1].endsWith('else') && result.push(' ');
+        result.push(line.replace(/\s*({|}|=|\*|,|\+|\/|>|<|&|\||\[|\]|\(|\)|\-|!|;)\s*/g, '$1'));
+        newLine = true;
+      }
+
+      return result;
+    }, [])
+    .join('')
+    .replace(/\n+/g, '\n');
 }
 
 /**
@@ -253,18 +290,26 @@ function loadChunks (source: string, path: string, extension: string, warn: bool
  * @name loadShader
  * @description Iterates through all external chunks
  * and includes them into the shader's source code
- *
- * @param {string} source    Shader's source code
- * @param {string} shader    Shader's absolute path
- * @param {string} extension Default shader extension
- * @param {boolean} warn     Check already included chunks
- *
+ * 
+ * @param {string} source Shader's source code
+ * @param {string} shader Shader's absolute path
+ * @param {LoadingOptions} options Configuration object to define:
+ *  - default shader extension when no extension is specified
+ *  - warn if the same chunk was imported multiple times
+ *  - compress the resulting shader code
+ * 
  * @returns {string} Shader file with included chunks
  */
-export default function (source: string, shader: string, extension: string, warn: boolean): string {
+export default function (source: string, shader: string, options: LoadingOptions): string {
+  const { defaultExtension, warnDuplicatedImports, compress } = options;
+
   resetSavedChunks();
 
-  return loadChunks(
-    source, shader, extension, warn
+  shader = loadChunks(
+    source, shader,
+    defaultExtension,
+    warnDuplicatedImports
   );
+
+  return compress ? comressShader(shader) : shader;
 }

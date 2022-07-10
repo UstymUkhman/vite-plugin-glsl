@@ -6,10 +6,9 @@
  * @license MIT
  */
 
-import type { FilterPattern } from '@rollup/pluginutils';
 import type { Plugin, ResolvedConfig } from 'vite';
-
 import { createFilter } from '@rollup/pluginutils';
+import type { PluginOptions } from './types.d';
 import { transformWithEsbuild } from 'vite';
 import loadShader from './loadShader';
 
@@ -34,33 +33,9 @@ const DEFAULT_SHADERS = Object.freeze([
 ]);
 
 /**
- * @type {Object}
- * @name PluginOptions
- * 
- * @property {FilterPattern} exclude         - File paths/extensions to ignore
- * @property {FilterPattern} include         - File paths/extensions to import
- * @property {string} defaultExtension       - Shader suffix when no extension is specified
- * @property {boolean} warnDuplicatedImports - Warn if the same chunk was imported multiple times
- * 
- * @default
- * {
- *   exclude: undefined,
- *   include: DEFAULT_SHADERS,
- *   defaultExtension: DEFAULT_EXTENSION,
- *   warnDuplicatedImports: true
- * }
- */
-type PluginOptions = {
-  exclude?: FilterPattern;
-  include?: FilterPattern;
-  defaultExtension?: string;
-  warnDuplicatedImports?: boolean;
-};
-
-/**
  * @function
  * @name glsl
- *
+ * 
  * @param {PluginOptions} options Plugin config object
  * 
  * @returns {Plugin} Vite plugin that converts shader code
@@ -70,7 +45,8 @@ export default function (
     exclude = undefined,
     include = DEFAULT_SHADERS,
     defaultExtension = DEFAULT_EXTENSION,
-    warnDuplicatedImports = true
+    warnDuplicatedImports = true,
+    compress = false
   }: PluginOptions = {}
 ): Plugin
 {
@@ -88,7 +64,11 @@ export default function (
 
     async transform (source, shader) {
       if (filter(shader)) return await transformWithEsbuild(
-        loadShader(source, shader, defaultExtension, warnDuplicatedImports), shader, {
+        loadShader(source, shader, {
+          warnDuplicatedImports,
+          defaultExtension,
+          compress
+        }), shader, {
           sourcemap: config.build.sourcemap && 'external',
           minifyWhitespace: production,
           loader: 'text',
