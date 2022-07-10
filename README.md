@@ -32,10 +32,10 @@ export default defineConfig({
 
 ```ts
 glsl({
-  exclude = undefined,                         // {FilterPattern | undefined} - File paths/extensions to ignore
-  include = /\.(glsl|wgsl|vert|frag|vs|fs)$/i, // {FilterPattern | undefined} - File paths/extensions to import
-  defaultExtension = 'glsl',                   // {string        | undefined} - Shader suffix when no extension is specified
-  warnDuplicatedImports = true                 // {boolean       | undefined} - Warn if the same chunk was imported multiple times
+  exclude: undefined,                         // File paths/extensions to ignore
+  include: /\.(glsl|wgsl|vert|frag|vs|fs)$/i, // File paths/extensions to import
+  defaultExtension: 'glsl',                   // Shader suffix when no extension is specified
+  warnDuplicatedImports: true                 // Warn if the same chunk was imported multiple times
 })
 ```
 

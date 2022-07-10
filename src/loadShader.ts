@@ -44,16 +44,28 @@ const include = /#include(\s+([^\s<>]+));?/gi;
 const dependentChunks: Map<string, string[]> = new Map();
 
 /**
+ * @const
+ * @name duplicatedChunks
+ * @type {readonly Map<string, string[]>}
+ * 
+ * @description Map of duplicated shader
+ * imports, used by warning messages
+ */
+const duplicatedChunks: Map<string, string[]> = new Map();
+
+/**
  * @function
  * @name resetSavedChunks
- * @description Clears "allChunks" & "dependentChunks"
- * lists and resets "recursiveChunk" path to empty
+ * @description Clears all lists of saved chunks
+ * and resets "recursiveChunk" path to empty
  * 
  * @returns {string} Copy of "recursiveChunk" path
  */
 function resetSavedChunks (): string {
   const chunk = recursiveChunk;
+  duplicatedChunks.clear();
   dependentChunks.clear();
+
   recursiveChunk = '';
   allChunks.clear();
   return chunk;
@@ -76,6 +88,7 @@ function getRecursionCaller (): string {
  * @function
  * @name checkDuplicatedImports
  * @description Checks if shader chunk was already included
+ * and adds it to the "duplicatedChunks" list if yes
  * 
  * @param {string} path Shader's absolute path
  * 
@@ -85,10 +98,17 @@ function checkDuplicatedImports (path: string): void {
   if (!allChunks.has(path)) return;
   const caller = getRecursionCaller();
 
+  let chunks = duplicatedChunks.get(caller);
+  if (chunks?.includes(path)) return;
+
+  chunks ??= [];
+  chunks.push(path);
+  duplicatedChunks.set(caller, chunks);
+
   emitWarning(`'${path}' was included multiple times.`, {
     code: 'vite-plugin-glsl',
     detail: 'Please avoid multiple imports of the same chunk in order to avoid' +
-    ` recursions and optimize your shader length. Last import found in file '${caller}'.`
+    ` recursions and optimize your shader length.\nDuplicated import found in file '${caller}'.`
   });
 }
 
