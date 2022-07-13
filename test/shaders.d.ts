@@ -4,8 +4,8 @@ declare module '*.vs' {
 }
 
 declare module '*.fs' {
-	const value: string;
-	export default value;
+  const value: string;
+  export default value;
 }
 
 declare module '*.vert' {
@@ -14,16 +14,16 @@ declare module '*.vert' {
 }
 
 declare module '*.frag' {
-	const value: string;
-	export default value;
+  const value: string;
+  export default value;
 }
 
 declare module '*.glsl' {
-	const value: string;
-	export default value;
+  const value: string;
+  export default value;
 }
 
 declare module '*.wgsl' {
-	const value: string;
-	export default value;
+  const value: string;
+  export default value;
 }

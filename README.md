@@ -35,13 +35,14 @@ glsl({
   exclude: undefined,                         // File paths/extensions to ignore
   include: /\.(glsl|wgsl|vert|frag|vs|fs)$/i, // File paths/extensions to import
   defaultExtension: 'glsl',                   // Shader suffix when no extension is specified
-  warnDuplicatedImports: true                 // Warn if the same chunk was imported multiple times
+  warnDuplicatedImports: true,                // Warn if the same chunk was imported multiple times
+  compress: false                             // Compress the resulting shader code
 })
 ```
 
 ## What it does ##
 
-Imports and inlines shader chunks within `GLSL` files relative to their directory.
+Imports, inlines (and compresses) shader chunks within `GLSL` files relative to their directory.
 
 ### Example ###
 
@@ -159,6 +160,8 @@ void main (void) {
 - Starting from `v0.1.5` this plugin warns about duplicated chunks imports and throws an error when a recursive loop occurres.
 
 - Starting from `v0.2.0` this plugin uses a config object as a single argument to `glsl` function and allows to disable import warnings with the `warnDuplicatedImports` param set to `false`.
+
+- Starting from `v0.2.2` this plugin supports `compress` option to optimize output shader length. You might consider setting this to `true` in production environment.
 
 **Note:** When used with [three.js](https://github.com/mrdoob/three.js) r0.99 and higher, it's possible to include shader chunks as specified in the [documentation](https://threejs.org/docs/index.html?q=Shader#api/en/materials/ShaderMaterial), those imports will be ignored by `vite-plugin-glsl` since they are handled internally by the library itself:
 
