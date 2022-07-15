@@ -1,4 +1,4 @@
-import glsl from './src';
+import glsl from './src/index.mjs';
 import { defineConfig } from 'vite';
 
 export default defineConfig({

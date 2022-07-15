@@ -1,7 +1,5 @@
-/// <reference types="./shaders" />
 import shader from './glsl/main.frag';
-
-const app = document.getElementById('app') as HTMLElement;
+const app = document.getElementById('app');
 
 app.style.backgroundColor = '#222';
 app.style.fontFamily = 'monospace';

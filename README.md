@@ -18,7 +18,7 @@ yarn add vite-plugin-glsl --dev
 
 ## Usage ##
 
-```ts
+```js
 // vite.config.js
 import glsl from 'vite-plugin-glsl';
 import { defineConfig } from 'vite';
@@ -30,7 +30,7 @@ export default defineConfig({
 
 ## Default Options ##
 
-```ts
+```js
 glsl({
   exclude: undefined,                         // File paths/extensions to ignore
   include: /\.(glsl|wgsl|vert|frag|vs|fs)$/i, // File paths/extensions to import
@@ -57,13 +57,13 @@ root
 │   │   └── utils/
 │   │       ├── chunk1.glsl
 │   │       └── chunk2.frag
-│   └── main.ts
+│   └── main.js
 ├── vite.config.js
 └── package.json
 ```
 
-```ts
-// main.ts
+```js
+// main.js
 import fragment from './glsl/main.frag';
 ```
 
@@ -155,7 +155,7 @@ void main (void) {
 
 - Starting from `v0.1.0` this plugin supports WebGPU shaders with `.wgsl` extension.
 
-- Starting from `v0.1.2` this plugin generates sourcemaps using vite esbuild when the `sourcemap` [option](https://github.com/UstymUkhman/vite-plugin-glsl/blob/main/vite.config.ts#L5) is set to `true`.
+- Starting from `v0.1.2` this plugin generates sourcemaps using vite esbuild when the `sourcemap` [option](https://github.com/UstymUkhman/vite-plugin-glsl/blob/main/vite.config.js#L5) is set to `true`.
 
 - Starting from `v0.1.5` this plugin warns about duplicated chunks imports and throws an error when a recursive loop occurres.
 
