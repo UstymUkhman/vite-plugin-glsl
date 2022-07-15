@@ -2,13 +2,13 @@
  * @module vite-plugin-glsl
  * @description Import shader file chunks
  * @author Ustym Ukhman <ustym.ukhman@gmail.com>
- * @version 0.2.3
+ * @version 0.3.0
  * @license MIT
  */
 
 import { createFilter } from '@rollup/pluginutils';
 import { transformWithEsbuild } from 'vite';
-import loadShader from './loadShader.mjs';
+import loadShader from './loadShader.js';
 
 /**
  * @const
