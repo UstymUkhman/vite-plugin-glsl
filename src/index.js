@@ -34,11 +34,13 @@ const DEFAULT_SHADERS = Object.freeze([
  * @function
  * @name glsl
  * 
- * @see {@link vite-plugin-glsl/src/types.d.ts}
+ * @see {@link https://vitejs.dev/guide/api-plugin.html}
+ * @description Imports, inlines and compresses GLSL shader chunk files.
+ * 
  * @param {PluginOptions} options Plugin config object
  * 
  * @returns {Plugin} Vite plugin that converts shader code
- * @link https://vitejs.dev/guide/api-plugin.html
+ * @link https://github.com/UstymUkhman/vite-plugin-glsl
  */
 export default function ({
     exclude = undefined,
@@ -61,20 +63,18 @@ export default function ({
     },
 
     async transform (source, shader) {
-      if (filter(shader)) {
-        return await transformWithEsbuild(
-          loadShader(source, shader, {
-            warnDuplicatedImports,
-            defaultExtension,
-            compress
-          }), shader, {
-            sourcemap: config.build.sourcemap && 'external',
-            minifyWhitespace: production,
-            loader: 'text',
-            format: 'esm'
-          }
-        );
-      }
+      if (filter(shader)) return await transformWithEsbuild(
+        loadShader(source, shader, {
+          warnDuplicatedImports,
+          defaultExtension,
+          compress
+        }), shader, {
+          sourcemap: config.build.sourcemap && 'external',
+          minifyWhitespace: production,
+          loader: 'text',
+          format: 'esm'
+        }
+      );
     }
   };
 }
