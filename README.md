@@ -18,7 +18,7 @@ yarn add vite-plugin-glsl --dev
 
 ## Usage ##
 
-```ts
+```js
 // vite.config.js
 import glsl from 'vite-plugin-glsl';
 import { defineConfig } from 'vite';
@@ -30,7 +30,7 @@ export default defineConfig({
 
 ## Default Options ##
 
-```ts
+```js
 glsl({
   exclude: undefined,                         // File paths/extensions to ignore
   include: /\.(glsl|wgsl|vert|frag|vs|fs)$/i, // File paths/extensions to import
@@ -57,13 +57,13 @@ root
 │   │   └── utils/
 │   │       ├── chunk1.glsl
 │   │       └── chunk2.frag
-│   └── main.ts
+│   └── main.js
 ├── vite.config.js
 └── package.json
 ```
 
-```ts
-// main.ts
+```js
+// main.js
 import fragment from './glsl/main.frag';
 ```
 
@@ -155,13 +155,15 @@ void main (void) {
 
 - Starting from `v0.1.0` this plugin supports WebGPU shaders with `.wgsl` extension.
 
-- Starting from `v0.1.2` this plugin generates sourcemaps using vite esbuild when the `sourcemap` [option](https://github.com/UstymUkhman/vite-plugin-glsl/blob/main/vite.config.ts#L5) is set to `true`.
+- Starting from `v0.1.2` this plugin generates sourcemaps using vite esbuild when the `sourcemap` [option](https://github.com/UstymUkhman/vite-plugin-glsl/blob/main/vite.config.js#L5) is set to `true`.
 
 - Starting from `v0.1.5` this plugin warns about duplicated chunks imports and throws an error when a recursive loop occurres.
 
 - Starting from `v0.2.0` this plugin uses a config object as a single argument to `glsl` function and allows to disable import warnings with the `warnDuplicatedImports` param set to `false`.
 
 - Starting from `v0.2.2` this plugin supports `compress` option to optimize output shader length. You might consider setting this to `true` in production environment.
+
+- Starting from `v0.3.0` this plugin is pure [ESM](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Modules). Consider updating your project to an ESM module by adding `"type": "module"` in your `package.json` or consult [this](https://github.com/UstymUkhman/vite-plugin-glsl/issues/16) issue for possible workarounds.
 
 **Note:** When used with [three.js](https://github.com/mrdoob/three.js) r0.99 and higher, it's possible to include shader chunks as specified in the [documentation](https://threejs.org/docs/index.html?q=Shader#api/en/materials/ShaderMaterial), those imports will be ignored by `vite-plugin-glsl` since they are handled internally by the library itself:
 

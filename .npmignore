@@ -1,8 +1,6 @@
-src
 test
 index.html
 favicon.svg
 node_modules
-tsconfig.json
-vite.config.ts
+vite.config.js
 vite-plugin-glsl.code-workspace

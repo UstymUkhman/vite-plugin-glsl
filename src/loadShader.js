@@ -1,5 +1,4 @@
 import { dirname, resolve, extname, posix, sep } from 'path';
-import type { LoadingOptions } from './types.d';
 import { emitWarning } from 'process';
 import { readFileSync } from 'fs';
 
@@ -20,7 +19,29 @@ let recursiveChunk = '';
  * @description List of all shader chunks,
  * it's used to track included files
  */
-const allChunks: Set<string> = new Set();
+const allChunks = new Set();
+
+/**
+ * @const
+ * @name dependentChunks
+ * @type {readonly Map<string, string[]>}
+ * 
+ * @description Map of shaders that import other chunks, it's
+ * used to track included files in order to avoid recursion
+ * - Key: shader path that uses other chunks as dependencies
+ * - Value: list of chunk paths included within the shader
+ */
+const dependentChunks = new Map();
+
+ /**
+  * @const
+  * @name duplicatedChunks
+  * @type {readonly Map<string, string[]>}
+  * 
+  * @description Map of duplicated shader
+  * imports, used by warning messages
+  */
+const duplicatedChunks = new Map();
 
 /**
  * @const
@@ -33,28 +54,6 @@ const allChunks: Set<string> = new Set();
 const include = /#include(\s+([^\s<>]+));?/gi;
 
 /**
- * @const
- * @name dependentChunks
- * @type {readonly Map<string, string[]>}
- * 
- * @description Map of shaders that import other chunks, it's
- * used to track included files in order to avoid recursion
- * - Key: shader path that uses other chunks as dependencies
- * - Value: list of chunk paths included within the shader
- */
-const dependentChunks: Map<string, string[]> = new Map();
-
-/**
- * @const
- * @name duplicatedChunks
- * @type {readonly Map<string, string[]>}
- * 
- * @description Map of duplicated shader
- * imports, used by warning messages
- */
-const duplicatedChunks: Map<string, string[]> = new Map();
-
-/**
  * @function
  * @name resetSavedChunks
  * @description Clears all lists of saved chunks
@@ -62,7 +61,7 @@ const duplicatedChunks: Map<string, string[]> = new Map();
  * 
  * @returns {string} Copy of "recursiveChunk" path
  */
-function resetSavedChunks (): string {
+function resetSavedChunks () {
   const chunk = recursiveChunk;
   duplicatedChunks.clear();
   dependentChunks.clear();
@@ -80,7 +79,7 @@ function resetSavedChunks (): string {
  * 
  * @returns {string} Chunk path that started a recursion
  */
-function getRecursionCaller (): string {
+function getRecursionCaller () {
   const dependencies = [...dependentChunks.keys()];
   return dependencies[dependencies.length - 1];
 }
@@ -95,14 +94,13 @@ function getRecursionCaller (): string {
  * 
  * @throws {Warning} If shader chunk was already included
  */
-function checkDuplicatedImports (path: string): void {
+function checkDuplicatedImports (path) {
   if (!allChunks.has(path)) return;
   const caller = getRecursionCaller();
 
-  let chunks = duplicatedChunks.get(caller);
-  if (chunks?.includes(path)) return;
+  const chunks = duplicatedChunks.get(caller) ?? [];
+  if (chunks.includes(path)) return;
 
-  chunks ??= [];
   chunks.push(path);
   duplicatedChunks.set(caller, chunks);
 
@@ -123,7 +121,7 @@ function checkDuplicatedImports (path: string): void {
  * 
  * @returns {string} Shader's source code without comments
  */
-function removeSourceComments (source: string): string {
+function removeSourceComments (source) {
   if (source.includes('/*') && source.includes('*/')) {
     source = source.slice(0, source.indexOf('/*')) +
     source.slice(source.indexOf('*/') + 2, source.length);
@@ -142,40 +140,6 @@ function removeSourceComments (source: string): string {
 
 /**
  * @function
- * @name comressShader
- * @description Compresses shader source code by
- * removing unnecessary whitespace and empty lines
- * 
- * @param {string} shader   Shader code with included chunks
- * @param {boolean} newLine Flag to require a new line for the code
- * 
- * @returns {string} Compressed shader's source code
- */
-function comressShader (shader: string, newLine = false): string {
-  return shader.replace(/\\(?:\r\n|\n\r|\n|\r)|\/\*.*?\*\/|\/\/(?:\\(?:\r\n|\n\r|\n|\r)|[^\n\r])*/g, '')
-    .split(/\n+/).reduce((result: string[], line: string): string[] => {
-      line = line.trim().replace(/\s{2,}|\t/, ' ');
-
-      if (line[0] === '#') {
-        newLine && result.push('\n');
-        result.push(line, '\n');
-        newLine = false;
-      }
-
-      else {
-        !line.startsWith('{') && result.length && result[result.length - 1].endsWith('else') && result.push(' ');
-        result.push(line.replace(/\s*({|}|=|\*|,|\+|\/|>|<|&|\||\[|\]|\(|\)|\-|!|;)\s*/g, '$1'));
-        newLine = true;
-      }
-
-      return result;
-    }, [])
-    .join('')
-    .replace(/\n+/g, '\n');
-}
-
-/**
- * @function
  * @name checkRecursiveImports
  * @description Checks if shader dependencies
  * have caused a recursion error or warning
@@ -185,7 +149,7 @@ function comressShader (shader: string, newLine = false): string {
  * 
  * @returns {boolean} Import recursion has occurred
  */
-function checkRecursiveImports (path: string, warn: boolean): boolean {
+function checkRecursiveImports (path, warn) {
   warn && checkDuplicatedImports(path);
   return checkIncludedDependencies(path, path);
 }
@@ -201,7 +165,7 @@ function checkRecursiveImports (path: string, warn: boolean): boolean {
  * 
  * @returns {boolean} Included chunk started a recursion
  */
-function checkIncludedDependencies (path: string, root: string): boolean {
+function checkIncludedDependencies (path, root) {
   const dependencies = dependentChunks.get(path);
   let recursiveDependency = false;
 
@@ -210,11 +174,43 @@ function checkIncludedDependencies (path: string, root: string): boolean {
     return true;
   }
 
-  dependencies?.forEach(dependency => recursiveDependency ||=
-    checkIncludedDependencies(dependency, root)
+  dependencies?.forEach(dependency => recursiveDependency =
+    recursiveDependency || checkIncludedDependencies(dependency, root)
   );
 
   return recursiveDependency;
+}
+
+/**
+ * @function
+ * @name comressShader
+ * @description Compresses shader source code by
+ * removing unnecessary whitespace and empty lines
+ * 
+ * @param {string} shader   Shader code with included chunks
+ * @param {boolean} newLine Flag to require a new line for the code
+ * 
+ * @returns {string} Compressed shader's source code
+ */
+function comressShader (shader, newLine = false) {
+  return shader.replace(/\\(?:\r\n|\n\r|\n|\r)|\/\*.*?\*\/|\/\/(?:\\(?:\r\n|\n\r|\n|\r)|[^\n\r])*/g, '')
+    .split(/\n+/).reduce((result, line) => {
+      line = line.trim().replace(/\s{2,}|\t/, ' ');
+
+      if (line[0] === '#') {
+        newLine && result.push('\n');
+        result.push(line, '\n');
+        newLine = false;
+      }
+
+      else {
+        !line.startsWith('{') && result.length && result[result.length - 1].endsWith('else') && result.push(' ');
+        result.push(line.replace(/\s*({|}|=|\*|,|\+|\/|>|<|&|\||\[|\]|\(|\)|\-|!|;)\s*/g, '$1'));
+        newLine = true;
+      }
+
+      return result;
+    }, []).join('').replace(/\n+/g, '\n');
 }
 
 /**
@@ -231,7 +227,7 @@ function checkIncludedDependencies (path: string, root: string): boolean {
  * @throws {Error}   If shader chunks started a recursion loop
  * @returns {string} Shader's source code without external chunks
  */
-function loadChunks (source: string, path: string, extension: string, warn: boolean): string {
+function loadChunks (source, path, extension, warn) {
   const unixPath = path.split(sep).join(posix.sep);
 
   if (checkRecursiveImports(unixPath, warn)) {
@@ -246,7 +242,7 @@ function loadChunks (source: string, path: string, extension: string, warn: bool
     dependentChunks.set(unixPath, []);
     const currentDirectory = directory;
 
-    source = source.replace(include, (_, chunkPath: string): string => {
+    source = source.replace(include, (_, chunkPath) => {
       chunkPath = chunkPath.trim().replace(/^(?:"|')?|(?:"|')?;?$/gi, '');
 
       const directoryIndex = chunkPath.lastIndexOf('/');
@@ -300,16 +296,20 @@ function loadChunks (source: string, path: string, extension: string, warn: bool
  * 
  * @returns {string} Shader file with included chunks
  */
-export default function (source: string, shader: string, options: LoadingOptions): string {
+export default function (source, shader, options) {
   const { defaultExtension, warnDuplicatedImports, compress } = options;
 
   resetSavedChunks();
 
-  shader = loadChunks(
+  return compress ? comressShader(
+    loadChunks(
+      source, shader,
+      defaultExtension,
+      warnDuplicatedImports
+    )
+  ) : loadChunks(
     source, shader,
     defaultExtension,
     warnDuplicatedImports
   );
-
-  return compress ? comressShader(shader) : shader;
 }

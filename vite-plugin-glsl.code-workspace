@@ -1,13 +1,13 @@
 {
 	"settings": {
     "editor.bracketPairColorization.enabled": false,
-    "js-import.filesToScan": "**/*.{ts,js}",
+    "js-import.filesToScan": "**/*.{d.ts,js}",
 		"git.ignoreLimitWarning": true,
 		"js-import.semicolon": true,
 
 		"eslint.validate": [
-      "typescript"
-    ],
+      "javascript"
+    ]
   },
 
   "folders": [{
