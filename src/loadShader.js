@@ -33,14 +33,14 @@ const allChunks = new Set();
  */
 const dependentChunks = new Map();
 
- /**
-  * @const
-  * @name duplicatedChunks
-  * @type {readonly Map<string, string[]>}
-  * 
-  * @description Map of duplicated shader
-  * imports, used by warning messages
-  */
+/**
+ * @const
+ * @name duplicatedChunks
+ * @type {readonly Map<string, string[]>}
+ * 
+ * @description Map of duplicated shader
+ * imports, used by warning messages
+ */
 const duplicatedChunks = new Map();
 
 /**
@@ -218,16 +218,17 @@ function comressShader (shader, newLine = false) {
  * @name loadChunks
  * @description Includes shader's dependencies
  * and removes comments from the source code
- *
+ * 
  * @param {string}  source    Shader's source code
  * @param {string}  path      Shader's absolute path
  * @param {string}  extension Default shader extension
  * @param {boolean} warn      Check already included chunks
- *
+ * @param {string}  root      Shader's root directory
+ * 
  * @throws {Error}   If shader chunks started a recursion loop
  * @returns {string} Shader's source code without external chunks
  */
-function loadChunks (source, path, extension, warn) {
+function loadChunks (source, path, extension, warn, root) {
   const unixPath = path.split(sep).join(posix.sep);
 
   if (checkRecursiveImports(unixPath, warn)) {
@@ -246,8 +247,8 @@ function loadChunks (source, path, extension, warn) {
       chunkPath = chunkPath.trim().replace(/^(?:"|')?|(?:"|')?;?$/gi, '');
 
       if (!chunkPath.indexOf('/')) {
-        const root = cwd().split(sep).join(posix.sep);
-        chunkPath = root + chunkPath;
+        const base = cwd().split(sep).join(posix.sep);
+        chunkPath = base + root + chunkPath;
       }
 
       const directoryIndex = chunkPath.lastIndexOf('/');
@@ -269,7 +270,8 @@ function loadChunks (source, path, extension, warn) {
 
       return loadChunks(
         readFileSync(shader, 'utf8'),
-        shader, extension, warn
+        shader, extension,
+        warn, root
       );
     });
   }
@@ -297,24 +299,23 @@ function loadChunks (source, path, extension, warn) {
  * @param {LoadingOptions} options Configuration object to define:
  *  - default shader extension when no extension is specified
  *  - warn if the same chunk was imported multiple times
- *  - compress the resulting shader code
+ *  - whether compress the resulting shader code
+ *  - directory for chunk imports from root
  * 
  * @returns {string} Shader file with included chunks
  */
 export default function (source, shader, options) {
-  const { defaultExtension, warnDuplicatedImports, compress } = options;
+  const { compress, defaultExtension, warnDuplicatedImports, root } = options;
 
   resetSavedChunks();
 
   return compress ? comressShader(
     loadChunks(
-      source, shader,
-      defaultExtension,
-      warnDuplicatedImports
+      source, shader, defaultExtension,
+      warnDuplicatedImports, root
     )
   ) : loadChunks(
-    source, shader,
-    defaultExtension,
-    warnDuplicatedImports
+    source, shader, defaultExtension,
+    warnDuplicatedImports, root
   );
 }

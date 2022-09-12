@@ -2,7 +2,7 @@
  * @module vite-plugin-glsl
  * @description Import shader file chunks
  * @author Ustym Ukhman <ustym.ukhman@gmail.com>
- * @version 0.3.0
+ * @version 0.4.0
  * @license MIT
  */
 
@@ -47,7 +47,8 @@ export default function ({
     include = DEFAULT_SHADERS,
     defaultExtension = DEFAULT_EXTENSION,
     warnDuplicatedImports = true,
-    compress = false
+    compress = false,
+    root = '/'
   } = {}
 ) {
   let config;
@@ -67,7 +68,8 @@ export default function ({
         loadShader(source, shader, {
           warnDuplicatedImports,
           defaultExtension,
-          compress
+          compress,
+          root
         }), shader, {
           sourcemap: config.build.sourcemap && 'external',
           minifyWhitespace: production,

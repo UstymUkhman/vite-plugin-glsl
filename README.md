@@ -2,9 +2,9 @@
 
 > Import shader file chunks
 
-![GitHub repo size](https://img.shields.io/github/repo-size/UstymUkhman/vite-plugin-glsl)
+![npm](https://img.shields.io/npm/dt/vite-plugin-glsl)
 ![GitHub package.json version](https://img.shields.io/github/package-json/v/UstymUkhman/vite-plugin-glsl?color=brightgreen)
-![GitHub](https://img.shields.io/github/license/UstymUkhman/vite-plugin-glsl)
+![GitHub](https://img.shields.io/github/license/UstymUkhman/vite-plugin-glsl?color=brightgreen)
 
 *Inspired by [threejs-glsl-loader](https://github.com/MONOGRID/threejs-glsl-loader#readme) and [vite-plugin-string](https://github.com/aweikalee/vite-plugin-string), compatible with [three.js](https://threejs.org/) and [lygia](https://github.com/patriciogonzalezvivo/lygia).*
 
@@ -36,7 +36,8 @@ glsl({
   include: /\.(glsl|wgsl|vert|frag|vs|fs)$/i, // File paths/extensions to import
   defaultExtension: 'glsl',                   // Shader suffix when no extension is specified
   warnDuplicatedImports: true,                // Warn if the same chunk was imported multiple times
-  compress: false                             // Compress the resulting shader code
+  compress: false,                            // Compress the resulting shader code
+  root: '/'                                   // Directory for root imports
 })
 ```
 
@@ -164,6 +165,8 @@ void main (void) {
 - Starting from `v0.2.2` this plugin supports `compress` option to optimize output shader length. You might consider setting this to `true` in production environment.
 
 - Starting from `v0.3.0` this plugin is pure [ESM](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Modules). Consider updating your project to an ESM module by adding `"type": "module"` in your `package.json` or consult [this](https://github.com/UstymUkhman/vite-plugin-glsl/issues/16) issue for possible workarounds.
+
+- Starting from `v0.4.0` this plugin supports chunk imports from project root and `root` option to override the default root directory.
 
 **Note:** When used with [three.js](https://github.com/mrdoob/three.js) r0.99 and higher, it's possible to include shader chunks as specified in the [documentation](https://threejs.org/docs/index.html?q=Shader#api/en/materials/ShaderMaterial), those imports will be ignored by `vite-plugin-glsl` since they are handled internally by the library itself:
 

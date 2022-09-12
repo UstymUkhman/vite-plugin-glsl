@@ -9,11 +9,13 @@ import type { FilterPattern } from '@rollup/pluginutils';
  * @property {string}  defaultExtension      - Shader suffix when no extension is specified
  * @property {boolean} warnDuplicatedImports - Warn if the same chunk was imported multiple times
  * @property {boolean} compress              - Compress the resulting shader code
+ * @property {string}  root                  - Directory for root imports
  */
 export type LoadingOptions = {
   defaultExtension: string;
   warnDuplicatedImports: boolean;
   compress: boolean;
+  root: string;
 };
 
 /**
@@ -30,6 +32,7 @@ export type LoadingOptions = {
  *   defaultExtension: DEFAULT_EXTENSION,
  *   warnDuplicatedImports: true,
  *   compress: false,
+ *   root: '/',
  *   exclude: undefined,
  *   include: DEFAULT_SHADERS
  * }
