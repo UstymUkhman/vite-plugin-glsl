@@ -1,5 +1,5 @@
 import { dirname, resolve, extname, posix, sep } from 'path';
-import { emitWarning } from 'process';
+import { emitWarning, cwd } from 'process';
 import { readFileSync } from 'fs';
 
 /**
@@ -244,6 +244,11 @@ function loadChunks (source, path, extension, warn) {
 
     source = source.replace(include, (_, chunkPath) => {
       chunkPath = chunkPath.trim().replace(/^(?:"|')?|(?:"|')?;?$/gi, '');
+
+      if (!chunkPath.indexOf('/')) {
+        const root = cwd().split(sep).join(posix.sep);
+        chunkPath = root + chunkPath;
+      }
 
       const directoryIndex = chunkPath.lastIndexOf('/');
       directory = currentDirectory;
