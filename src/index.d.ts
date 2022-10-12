@@ -2,12 +2,12 @@
  * @module vite-plugin-glsl
  * @description Import shader file chunks
  * @author Ustym Ukhman <ustym.ukhman@gmail.com>
- * @version 0.4.0
+ * @version 0.5.1
  * @license MIT
  */
 
-import type { Plugin } from 'vite';
 import type { PluginOptions } from './types.d';
+import type { Plugin } from 'vite';
 
 /**
  * @function
@@ -27,5 +27,6 @@ export default function ({
   defaultExtension,
   warnDuplicatedImports,
   compress,
+  watch,
   root
 }?: PluginOptions): Plugin;

@@ -37,6 +37,7 @@ glsl({
   defaultExtension: 'glsl',                   // Shader suffix when no extension is specified
   warnDuplicatedImports: true,                // Warn if the same chunk was imported multiple times
   compress: false,                            // Compress the resulting shader code
+  watch: true,                                // Recompile shader on chunk change
   root: '/'                                   // Directory for root imports
 })
 ```
@@ -167,6 +168,8 @@ void main (void) {
 - Starting from `v0.3.0` this plugin is pure [ESM](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Modules). Consider updating your project to an ESM module by adding `"type": "module"` in your `package.json` or consult [this](https://github.com/UstymUkhman/vite-plugin-glsl/issues/16) issue for possible workarounds.
 
 - Starting from `v0.4.0` this plugin supports chunk imports from project root and `root` option to override the default root directory.
+
+- Starting from `v0.5.0` this plugin supports hot reloading for shader chunks when the `watch` option is set to `true`.
 
 **Note:** When used with [three.js](https://github.com/mrdoob/three.js) r0.99 and higher, it's possible to include shader chunks as specified in the [documentation](https://threejs.org/docs/index.html?q=Shader#api/en/materials/ShaderMaterial), those imports will be ignored by `vite-plugin-glsl` since they are handled internally by the library itself:
 

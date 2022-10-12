@@ -2,12 +2,13 @@
  * @module vite-plugin-glsl
  * @description Import shader file chunks
  * @author Ustym Ukhman <ustym.ukhman@gmail.com>
- * @version 0.4.0
+ * @version 0.5.1
  * @license MIT
  */
 
 import { createFilter } from '@rollup/pluginutils';
 import { transformWithEsbuild } from 'vite';
+import watchShader from './watchShader.js';
 import loadShader from './loadShader.js';
 
 /**
@@ -48,6 +49,7 @@ export default function ({
     defaultExtension = DEFAULT_EXTENSION,
     warnDuplicatedImports = true,
     compress = false,
+    watch = true,
     root = '/'
   } = {}
 ) {
@@ -58,6 +60,16 @@ export default function ({
   return {
     enforce: 'pre',
     name: 'vite-plugin-glsl',
+
+    config (config) {
+      if (!watch) return;
+      config.server = config.server ?? {};
+      config.server.watch = config.server.watch ?? {};
+    },
+
+    configureServer (server) {
+      watch && watchShader(server, include, exclude, config.configFile);
+    },
 
     configResolved (resolvedConfig) {
       config = resolvedConfig;
