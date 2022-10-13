@@ -1,6 +1,6 @@
 precision highp float;
 
-#include chunk0.frag;
+#include /test/glsl/chunk0.frag
 
 out highp vec4 fragColor;
 

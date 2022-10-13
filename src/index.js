@@ -1,8 +1,8 @@
 /**
  * @module vite-plugin-glsl
- * @description Import shader file chunks
  * @author Ustym Ukhman <ustym.ukhman@gmail.com>
- * @version 0.5.1
+ * @description Import, inline (and compress) GLSL shader files
+ * @version 0.5.2
  * @license MIT
  */
 
@@ -34,20 +34,21 @@ const DEFAULT_SHADERS = Object.freeze([
 /**
  * @function
  * @name glsl
+ * @description Plugin entry point to update dev server to watch
+ * shader files and import, inline (and compress) chunk files
  * 
  * @see {@link https://vitejs.dev/guide/api-plugin.html}
- * @description Imports, inlines and compresses GLSL shader chunk files.
+ * @link https://github.com/UstymUkhman/vite-plugin-glsl
  * 
  * @param {PluginOptions} options Plugin config object
  * 
  * @returns {Plugin} Vite plugin that converts shader code
- * @link https://github.com/UstymUkhman/vite-plugin-glsl
  */
 export default function ({
     exclude = undefined,
     include = DEFAULT_SHADERS,
-    defaultExtension = DEFAULT_EXTENSION,
     warnDuplicatedImports = true,
+    defaultExtension = DEFAULT_EXTENSION,
     compress = false,
     watch = true,
     root = '/'

@@ -261,9 +261,7 @@ function loadChunks (source, path, extension, warn, root) {
 
       let shader = resolve(directory, chunkPath);
 
-      if (!extname(shader)) {
-        shader = `${shader}.${extension}`;
-      }
+      if (!extname(shader)) shader = `${shader}.${extension}`;
 
       const shaderPath = shader.split(sep).join(posix.sep);
       dependentChunks.get(unixPath)?.push(shaderPath);
@@ -297,9 +295,10 @@ function loadChunks (source, path, extension, warn, root) {
  * @param {string}         source  Shader's source code
  * @param {string}         shader  Shader's absolute path
  * @param {LoadingOptions} options Configuration object to define:
- *  - default shader extension when no extension is specified
+ * 
  *  - warn if the same chunk was imported multiple times
- *  - whether compress the resulting shader code
+ *  - default shader extension when no extension is specified
+ *  - whether to compress output shader code
  *  - directory for chunk imports from root
  * 
  * @returns {string} Shader file with included chunks

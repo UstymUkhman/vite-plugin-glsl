@@ -1,12 +1,12 @@
-import glsl from './src/index.js';
 import { defineConfig } from 'vite';
+import glsl from './src/index.js';
 
 export default defineConfig({
   build: { sourcemap: true },
   plugins: [glsl()],
 
   server: {
-    port: 8080,
-    open: false
+    open: false,
+    port: 8080
   }
 });

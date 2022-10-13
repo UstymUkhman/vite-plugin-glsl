@@ -13,11 +13,8 @@ import type { FilterPattern } from '@rollup/pluginutils';
  * @param {FilterPattern} exclude    File paths/extensions to ignore
  * @param {string}        configFile Vite configuration file path
  * 
- * @returns {function} Watcher cleanup on server shutdown
+ * @returns {function} Watcher cleanup callback on server shutdown
  */
 export default function (
-  server: ViteDevServer,
-  include: FilterPattern,
-  exclude: FilterPattern,
-  configFile: string
+  server: ViteDevServer, include: FilterPattern, exclude: FilterPattern, configFile: string
 ): () => unknown;

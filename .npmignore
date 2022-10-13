@@ -1,6 +1,10 @@
+# Folders:
 test
+node_modules
+
+# Files:
+.gitignore
 index.html
 favicon.svg
-node_modules
 vite.config.js
-vite-plugin-glsl.code-workspace
+*.code-workspace

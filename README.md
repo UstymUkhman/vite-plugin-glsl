@@ -1,12 +1,12 @@
 # Vite Plugin GLSL #
 
-> Import shader file chunks
+> Import, inline (and compress) GLSL shader files
 
-![npm](https://img.shields.io/npm/dt/vite-plugin-glsl)
-![GitHub package.json version](https://img.shields.io/github/package-json/v/UstymUkhman/vite-plugin-glsl?color=brightgreen)
-![GitHub](https://img.shields.io/github/license/UstymUkhman/vite-plugin-glsl?color=brightgreen)
+![npm](https://img.shields.io/npm/dt/vite-plugin-glsl?style=flat-square)
+![GitHub package.json version](https://img.shields.io/github/package-json/v/UstymUkhman/vite-plugin-glsl?color=brightgreen&style=flat-square)
+![GitHub](https://img.shields.io/github/license/UstymUkhman/vite-plugin-glsl?color=brightgreen&style=flat-square)
 
-*Inspired by [threejs-glsl-loader](https://github.com/MONOGRID/threejs-glsl-loader#readme) and [vite-plugin-string](https://github.com/aweikalee/vite-plugin-string), compatible with [three.js](https://threejs.org/) and [lygia](https://github.com/patriciogonzalezvivo/lygia).*
+*Inspired by [threejs-glsl-loader](https://github.com/MONOGRID/threejs-glsl-loader) and [vite-plugin-string](https://github.com/aweikalee/vite-plugin-string), compatible with [three.js](https://threejs.org/) and [lygia](https://github.com/patriciogonzalezvivo/lygia).*
 
 ## Installation ##
 
@@ -14,6 +14,8 @@
 npm i vite-plugin-glsl --save-dev
 # or
 yarn add vite-plugin-glsl --dev
+# or
+pnpm add -D vite-plugin-glsl
 ```
 
 ## Usage ##
@@ -34,17 +36,13 @@ export default defineConfig({
 glsl({
   exclude: undefined,                         // File paths/extensions to ignore
   include: /\.(glsl|wgsl|vert|frag|vs|fs)$/i, // File paths/extensions to import
-  defaultExtension: 'glsl',                   // Shader suffix when no extension is specified
   warnDuplicatedImports: true,                // Warn if the same chunk was imported multiple times
-  compress: false,                            // Compress the resulting shader code
-  watch: true,                                // Recompile shader on chunk change
+  defaultExtension: 'glsl',                   // Shader suffix when no extension is specified
+  compress: false,                            // Compress output shader code
+  watch: true,                                // Recompile shader on change
   root: '/'                                   // Directory for root imports
 })
 ```
-
-## What it does ##
-
-Imports, inlines (and compresses) shader chunks within `GLSL` files relative to their directory.
 
 ### Example ###
 
@@ -85,7 +83,7 @@ void main (void) {
 ```glsl
 // chunk0.frag
 
-// ".glsl" extension will be added automatically:
+// ".glsl" extension will be set automatically:
 #include utils/chunk1;
 
 highp vec4 chunkFn () {
@@ -169,16 +167,17 @@ void main (void) {
 
 - Starting from `v0.4.0` this plugin supports chunk imports from project root and `root` option to override the default root directory.
 
-- Starting from `v0.5.0` this plugin supports hot reloading for shader chunks when the `watch` option is set to `true`.
+- Starting from `v0.5.0` this plugin supports shaders hot reloading when `watch` option is set to `true`.
 
-**Note:** When used with [three.js](https://github.com/mrdoob/three.js) r0.99 and higher, it's possible to include shader chunks as specified in the [documentation](https://threejs.org/docs/index.html?q=Shader#api/en/materials/ShaderMaterial), those imports will be ignored by `vite-plugin-glsl` since they are handled internally by the library itself:
+#### Note: ####
+When used with [three.js](https://github.com/mrdoob/three.js) r0.99 and higher, it's possible to include shader chunks as specified in the [documentation](https://threejs.org/docs/index.html?q=Shader#api/en/materials/ShaderMaterial), those imports will be ignored by `vite-plugin-glsl` since they are handled internally by the library itself:
 
 ```glsl
 precision highp float;
 
 #include <common>
 
-vec3 randomVec3 (const in vec2 uv) {
+vec3 randVec3 (const in vec2 uv) {
   return vec3(
     rand(uv * 0.1), rand(uv * 2.5), rand(uv)
   );

@@ -13,7 +13,7 @@ import { utimes } from 'fs';
  * @param {FilterPattern} exclude    File paths/extensions to ignore
  * @param {string}        configFile Vite configuration file path
  * 
- * @returns {function} Watcher cleanup on server shutdown
+ * @returns {function} Watcher cleanup callback on server shutdown
  */
 export default function (server, include, exclude, configFile) {
   const filter = createFilter(include, exclude);
@@ -23,7 +23,7 @@ export default function (server, include, exclude, configFile) {
   server.watcher.on('change', file => {
     if (!filter(file)) return;
     const now = Date.now() / 1e3;
-    utimes(configFile, now, now, () => void 0);
+    utimes(configFile, now, now, () => {});
   });
 
   return () => server.watcher.unwatch(include);
