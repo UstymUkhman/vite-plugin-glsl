@@ -17,11 +17,11 @@
     "url": "git+https://github.com/UstymUkhman/vite-plugin-glsl.git"
   },
   "bugs": {
-    "url": "https://github.com/UstymUkhman/vite-plugin-glsl/issues"
+    "url": "https://github.com/UstymUkhman/vite-plugin-glsl/issues",
+    "email": "ustym.ukhman@gmail.com"
   },
   "files": [
     "package.json",
-    ".npmignore",
     "yarn.lock",
     "README.md",
     "LICENSE",

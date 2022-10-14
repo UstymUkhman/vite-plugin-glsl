@@ -1,6 +1,16 @@
 import { createFilter } from '@rollup/pluginutils';
 import { utimes } from 'fs';
 
+function debounce (cb, delay = 500, leading = true) {
+  let timeout;
+
+  return () => {
+    clearTimeout(timeout);
+    if (leading && !timeout) cb();
+    timeout = setTimeout(cb, delay);
+  };
+};
+
 /**
  * @function
  * @since 0.5.0
@@ -16,14 +26,17 @@ import { utimes } from 'fs';
  * @returns {function} Watcher cleanup callback on server shutdown
  */
 export default function (server, include, exclude, configFile) {
+  const updateTimestamp = debounce((now = Date.now() / 1e3) =>
+    utimes(configFile, now, now, () => {})
+  );
+
   const filter = createFilter(include, exclude);
 
   server.watcher.add(include);
 
   server.watcher.on('change', file => {
     if (!filter(file)) return;
-    const now = Date.now() / 1e3;
-    utimes(configFile, now, now, () => {});
+    updateTimestamp();
   });
 
   return () => server.watcher.unwatch(include);
