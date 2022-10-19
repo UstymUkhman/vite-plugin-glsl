@@ -44,8 +44,8 @@ function debounce (cb, first) {
  * to the internal chokidar watcher to trigger hot reloading
  * 
  * @param {ViteDevServer} server     Vite development server config object
- * @param {FilterPattern} include    File paths/extensions to import
- * @param {FilterPattern} exclude    File paths/extensions to ignore
+ * @param {GlobPattern}   include    Glob pattern(s array) to import
+ * @param {GlobPattern}   exclude    Glob pattern(s array) to ignore
  * @param {string}        configFile Vite configuration file path
  * 
  * @returns {function} Watcher cleanup callback on server shutdown

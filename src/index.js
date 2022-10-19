@@ -2,7 +2,7 @@
  * @module vite-plugin-glsl
  * @author Ustym Ukhman <ustym.ukhman@gmail.com>
  * @description Import, inline (and compress) GLSL shader files
- * @version 0.5.2
+ * @version 0.5.3
  * @license MIT
  */
 
@@ -45,8 +45,8 @@ const DEFAULT_SHADERS = Object.freeze([
  * @returns {Plugin} Vite plugin that converts shader code
  */
 export default function ({
-    exclude = undefined,
     include = DEFAULT_SHADERS,
+    exclude = undefined,
     warnDuplicatedImports = true,
     defaultExtension = DEFAULT_EXTENSION,
     compress = false,

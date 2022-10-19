@@ -1,4 +1,9 @@
-import type { FilterPattern } from '@rollup/pluginutils';
+/**
+ * @const
+ * @readonly
+ * @typedef {string | string[]}
+ */
+export type GlobPattern = string | string[];
 
 /**
  * @typedef {Object}
@@ -26,8 +31,8 @@ export type LoadingOptions = {
  * @extends LoadingOptions
  * @description Plugin config object
  * 
- * @property {FilterPattern} exclude File paths/extensions to ignore
- * @property {FilterPattern} include File paths/extensions to import
+ * @property {GlobPattern} Glob pattern(s array) to import
+ * @property {GlobPattern} Glob pattern(s array) to ignore
  * 
  * @default {
  *   exclude: undefined,
@@ -40,6 +45,6 @@ export type LoadingOptions = {
  * }
  */
 export type PluginOptions = Partial<LoadingOptions> & {
-  exclude?: FilterPattern;
-  include?: FilterPattern;
+  include?: GlobPattern;
+  exclude?: GlobPattern;
 };

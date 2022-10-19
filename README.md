@@ -34,13 +34,17 @@ export default defineConfig({
 
 ```js
 glsl({
-  exclude: undefined,                         // File paths/extensions to ignore
-  include: /\.(glsl|wgsl|vert|frag|vs|fs)$/i, // File paths/extensions to import
-  warnDuplicatedImports: true,                // Warn if the same chunk was imported multiple times
-  defaultExtension: 'glsl',                   // Shader suffix when no extension is specified
-  compress: false,                            // Compress output shader code
-  watch: true,                                // Recompile shader on change
-  root: '/'                                   // Directory for root imports
+  include: [                   // Glob pattern, or array of glob patterns to import
+    '**/*.glsl', '**/*.wgsl',
+    '**/*.vert', '**/*.frag',
+    '**/*.vs', '**/*.fs'
+  ],
+  exclude: undefined,          // Glob pattern, or array of glob patterns to ignore
+  warnDuplicatedImports: true, // Warn if the same chunk was imported multiple times
+  defaultExtension: 'glsl',    // Shader suffix when no extension is specified
+  compress: false,             // Compress output shader code
+  watch: true,                 // Recompile shader on change
+  root: '/'                    // Directory for root imports
 })
 ```
 
@@ -169,7 +173,8 @@ void main (void) {
 
 - Starting from `v0.5.0` this plugin supports shaders hot reloading when `watch` option is set to `true`.
 
-#### Note: ####
+### Note: ###
+
 When used with [three.js](https://github.com/mrdoob/three.js) r0.99 and higher, it's possible to include shader chunks as specified in the [documentation](https://threejs.org/docs/index.html?q=Shader#api/en/materials/ShaderMaterial), those imports will be ignored by `vite-plugin-glsl` since they are handled internally by the library itself:
 
 ```glsl
