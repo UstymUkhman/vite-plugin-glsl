@@ -289,8 +289,9 @@ function loadChunks (source, path, extension, warn, root) {
 /**
  * @function
  * @name loadShader
- * @description Iterates through all external chunks
- * and includes them into the shader's source code
+ * @description Iterates through all external chunks,
+ * includes them into the shader's source code
+ * and optionally compresses the output
  * 
  * @param {string}         source  Shader's source code
  * @param {string}         shader  Shader's absolute path
@@ -298,7 +299,7 @@ function loadChunks (source, path, extension, warn, root) {
  * 
  *  - warn if the same chunk was imported multiple times
  *  - default shader extension when no extension is specified
- *  - whether to compress output shader code
+ *  - whether (and how) to compress output shader code
  *  - directory for chunk imports from root
  * 
  * @returns {string} Shader file with included chunks
@@ -308,13 +309,12 @@ export default function (source, shader, options) {
 
   resetSavedChunks();
 
-  return compress ? comressShader(
-    loadChunks(
-      source, shader, defaultExtension,
-      warnDuplicatedImports, root
-    )
-  ) : loadChunks(
+  const output = loadChunks(
     source, shader, defaultExtension,
     warnDuplicatedImports, root
   );
+
+  return !compress ? output
+    : typeof compress === 'function'
+    ? compress(output) : comressShader(output);
 }

@@ -3,8 +3,8 @@ import type { LoadingOptions } from './types.d';
 /**
  * @function
  * @name loadShader
- * @description Iterates through all external chunks
- * and includes them into the shader's source code
+ * @description Iterates through all external chunks, includes them
+ * into the shader's source code and optionally compresses the output
  * 
  * @param {string}         source  Shader's source code
  * @param {string}         shader  Shader's absolute path
@@ -12,7 +12,7 @@ import type { LoadingOptions } from './types.d';
  * 
  *  - warn if the same chunk was imported multiple times
  *  - default shader extension when no extension is specified
- *  - whether to compress output shader code
+ *  - whether (and how) to compress output shader code
  *  - directory for chunk imports from root
  * 
  * @returns {string} Shader file with included chunks

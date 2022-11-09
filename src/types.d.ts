@@ -6,20 +6,35 @@
 export type GlobPattern = string | string[];
 
 /**
+ * @const
+ * @readonly
+ * @default false
+ * @typedef {boolean | ((shader: string) => string)}
+ * 
+ * @description Boolean value or custom callback
+ * function to optimize output shader length
+ * 
+ * @param {string} shader Shader code with included chunks
+ * 
+ * @returns {string} Compressed shader's source code
+ */
+type Compress = boolean | ((shader: string) => string);
+
+/**
  * @typedef {Object}
  * @name LoadingOptions
  * @description Shader loading config object
  * 
- * @property {boolean} warnDuplicatedImports Warn if the same chunk was imported multiple times
- * @property {string}  defaultExtension      Shader suffix when no extension is specified
- * @property {boolean} compress              Compress output shader code
- * @property {boolean} watch                 Recompile shader on change
- * @property {string}  root                  Directory for root imports
+ * @property {boolean}  warnDuplicatedImports Warn if the same chunk was imported multiple times
+ * @property {string}   defaultExtension      Shader suffix when no extension is specified
+ * @property {Compress} compress              Compress output shader code
+ * @property {boolean}  watch                 Recompile shader on change
+ * @property {string}   root                  Directory for root imports
  */
 export type LoadingOptions = {
   warnDuplicatedImports: boolean;
   defaultExtension: string;
-  compress: boolean;
+  compress: Compress;
   watch: boolean;
   root: string;
 };

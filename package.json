@@ -8,7 +8,7 @@
   "types": "src/index.d.ts",
   "module": "src/index.js",
   "main": "src/index.js",
-  "version": "0.5.3",
+  "version": "0.5.4",
   "private": false,
   "license": "MIT",
   "type": "module",
@@ -48,10 +48,10 @@
     "vite": "^3.0.0"
   },
   "dependencies": {
-    "@rollup/pluginutils": "^5.0.1"
+    "@rollup/pluginutils": "^5.0.2"
   },
   "devDependencies": {
-    "vite": "^3.1.8"
+    "vite": "^3.2.3"
   },
   "engines": {
     "node": ">= 16.15.1",
