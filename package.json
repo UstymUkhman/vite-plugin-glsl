@@ -45,7 +45,7 @@
     "test": "vite"
   },
   "peerDependencies": {
-    "vite": "^3.0.0"
+    "vite": "^3.0.0 || ^4.0.0"
   },
   "dependencies": {
     "@rollup/pluginutils": "^5.0.2"
