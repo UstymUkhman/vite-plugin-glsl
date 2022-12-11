@@ -175,6 +175,8 @@ void main (void) {
 
 - Starting from `v0.5.4` this plugin supports custom `compress` callback function optimize to output shader length after all shader chunks have been included.
 
+- Starting from `v1.0.0` this plugin is fully compatible with `vite^4.0.0`.
+
 ### Note: ###
 
 When used with [three.js](https://github.com/mrdoob/three.js) r0.99 and higher, it's possible to include shader chunks as specified in the [documentation](https://threejs.org/docs/index.html?q=Shader#api/en/materials/ShaderMaterial), those imports will be ignored by `vite-plugin-glsl` since they are handled internally by the library itself:
