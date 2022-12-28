@@ -187,7 +187,7 @@ function checkIncludedDependencies (path, root) {
  * @description Compresses shader source code by
  * removing unnecessary whitespace and empty lines
  * 
- * @param {string} shader   Shader code with included chunks
+ * @param {string}  shader  Shader code with included chunks
  * @param {boolean} newLine Flag to require a new line for the code
  * 
  * @returns {string} Compressed shader's source code

@@ -2,13 +2,12 @@
  * @module vite-plugin-glsl
  * @author Ustym Ukhman <ustym.ukhman@gmail.com>
  * @description Import, inline (and compress) GLSL shader files
- * @version 1.0.1
+ * @version 1.0.2
  * @license MIT
  */
 
 import { createFilter } from '@rollup/pluginutils';
 import { transformWithEsbuild } from 'vite';
-import watchShader from './watchShader.js';
 import loadShader from './loadShader.js';
 
 /**
@@ -34,8 +33,8 @@ const DEFAULT_SHADERS = Object.freeze([
 /**
  * @function
  * @name glsl
- * @description Plugin entry point to update dev server to watch
- * shader files and import, inline (and compress) chunk files
+ * @description Plugin entry point to import,
+ * inline, (and compress) GLSL shader files
  * 
  * @see {@link https://vitejs.dev/guide/api-plugin.html}
  * @link https://github.com/UstymUkhman/vite-plugin-glsl
@@ -54,7 +53,7 @@ export default function ({
     root = '/'
   } = {}
 ) {
-  let config;
+  let config = undefined;
   const filter = createFilter(include, exclude);
   const production = process.env.NODE_ENV === 'production';
 
@@ -69,7 +68,9 @@ export default function ({
     },
 
     configureServer (server) {
-      watch && watchShader(server, include, exclude, config.configFile);
+      watch && server.watcher.on('change', shader =>
+        filter(shader) && server.restart()
+      );
     },
 
     configResolved (resolvedConfig) {
@@ -85,9 +86,8 @@ export default function ({
           root
         }), shader, {
           sourcemap: config.build.sourcemap && 'external',
-          minifyWhitespace: production,
-          loader: 'text',
-          format: 'esm'
+          loader: 'text', format: 'esm',
+          minifyWhitespace: production
         }
       );
     }

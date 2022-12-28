@@ -4,8 +4,8 @@ import type { Plugin } from 'vite';
 /**
  * @function
  * @name glsl
- * @description Plugin entry point to update dev server to watch
- * shader files and import, inline (and compress) chunk files
+ * @description Plugin entry point to import,
+ * inline, (and compress) GLSL shader files
  * 
  * @see {@link https://vitejs.dev/guide/api-plugin.html}
  * @link https://github.com/UstymUkhman/vite-plugin-glsl
