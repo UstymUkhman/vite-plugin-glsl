@@ -173,7 +173,7 @@ void main (void) {
 
 - Starting from `v0.5.0` this plugin supports shaders hot reloading when `watch` option is set to `true`.
 
-- Starting from `v0.5.4` this plugin supports custom `compress` callback function optimize to output shader length after all shader chunks have been included.
+- Starting from `v0.5.4` this plugin supports custom `compress` callback function to optimize output shader length after all shader chunks have been included.
 
 - Starting from `v1.0.0` this plugin is fully compatible with `vite^4.0.0`.
 
