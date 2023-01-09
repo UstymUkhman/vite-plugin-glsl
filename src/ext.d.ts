@@ -5,8 +5,8 @@
  * @description Generic shaders
  */
 declare module '*.glsl' {
-	const shader: string;
-	export default shader;
+  const shader: string;
+  export default shader;
 }
 
 /**
@@ -16,8 +16,8 @@ declare module '*.glsl' {
  * @description WebGPU shaders
  */
 declare module '*.wgsl' {
-	const shader: string;
-	export default shader;
+  const shader: string;
+  export default shader;
 }
 
 /**
@@ -38,8 +38,8 @@ declare module '*.vert' {
  * @description Fragment shaders
  */
 declare module '*.frag' {
-	const shader: string;
-	export default shader;
+  const shader: string;
+  export default shader;
 }
 
 /**
@@ -60,6 +60,6 @@ declare module '*.vs' {
  * @description Fragment shaders
  */
 declare module '*.fs' {
-	const shader: string;
-	export default shader;
+  const shader: string;
+  export default shader;
 }
