@@ -6,7 +6,7 @@
   "types": "./src/index.d.ts",
   "module": "./src/index.js",
   "main": "./src/index.js",
-  "version": "1.0.3",
+  "version": "1.1.0",
   "private": false,
   "license": "MIT",
   "type": "module",
@@ -19,9 +19,9 @@
     "email": "ustym.ukhman@gmail.com"
   },
   "author": {
-    "name" : "Ustym Ukhman",
-    "email" : "ustym.ukhman@gmail.com",
-    "url" : "https://github.com/UstymUkhman/"
+    "name": "Ustym Ukhman",
+    "email": "ustym.ukhman@gmail.com",
+    "url": "https://github.com/UstymUkhman/"
   },
   "exports": {
     ".": {

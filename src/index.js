@@ -2,7 +2,7 @@
  * @module vite-plugin-glsl
  * @author Ustym Ukhman <ustym.ukhman@gmail.com>
  * @description Import, inline (and compress) GLSL shader files
- * @version 1.0.3
+ * @version 1.1.0
  * @license MIT
  */
 
@@ -67,12 +67,6 @@ export default function ({
       config.server.watch = config.server.watch ?? {};
     },
 
-    configureServer (server) {
-      watch && server.watcher.on('change', shader =>
-        filter(shader) && server.restart()
-      );
-    },
-
     configResolved (resolvedConfig) {
       config = resolvedConfig;
     },
@@ -84,12 +78,18 @@ export default function ({
           defaultExtension,
           compress,
           root
-        }), shader, {
+        }),
+        shader, {
           sourcemap: config.build.sourcemap && 'external',
-          loader: 'text', format: 'esm',
-          minifyWhitespace: prod
+          minifyWhitespace: prod,
+          loader: 'text',
+          format: 'esm'
         }
       );
+    },
+
+    handleHotUpdate ({ file, server }) {
+      filter(file) && server.restart();
     }
   };
 }
