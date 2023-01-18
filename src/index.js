@@ -61,12 +61,6 @@ export default function ({
     enforce: 'pre',
     name: 'vite-plugin-glsl',
 
-    config (config) {
-      if (!watch) return;
-      config.server = config.server ?? {};
-      config.server.watch = config.server.watch ?? {};
-    },
-
     configResolved (resolvedConfig) {
       config = resolvedConfig;
     },
@@ -88,8 +82,8 @@ export default function ({
       );
     },
 
-    handleHotUpdate ({ file, server }) {
-      filter(file) && server.restart();
+    handleHotUpdate ({ file }) {
+      if (filter(file) && !watch) return [];
     }
   };
 }
