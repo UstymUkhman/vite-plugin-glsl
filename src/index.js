@@ -2,7 +2,7 @@
  * @module vite-plugin-glsl
  * @author Ustym Ukhman <ustym.ukhman@gmail.com>
  * @description Import, inline (and compress) GLSL shader files
- * @version 1.1.0
+ * @version 1.1.1
  * @license MIT
  */
 
@@ -82,8 +82,9 @@ export default function ({
       );
     },
 
-    handleHotUpdate ({ file }) {
-      if (filter(file) && !watch) return [];
+    handleHotUpdate ({ file, server }) {
+      watch && filter(file) &&
+        server.restart();
     }
   };
 }
