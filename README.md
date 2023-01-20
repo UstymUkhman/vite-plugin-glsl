@@ -177,7 +177,7 @@ void main (void) {
 
 - Starting from `v1.0.0` this plugin is fully compatible with `vite^4.0.0`.
 
-- Starting from `v1.1.0` this plugin has a complete TypeScript support.
+- Starting from `v1.1.1` this plugin has a complete TypeScript support. You can add module declarations for shader files by using:<br />`/// <reference types="vite-plugin-glsl/ext" />`.
 
 ### Note: ###
 

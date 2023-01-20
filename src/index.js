@@ -61,6 +61,12 @@ export default function ({
     enforce: 'pre',
     name: 'vite-plugin-glsl',
 
+    configureServer (server) {
+      watch && server.watcher.on('change', shader =>
+        filter(shader) && server.restart()
+      );
+    },
+
     configResolved (resolvedConfig) {
       config = resolvedConfig;
     },
@@ -75,16 +81,10 @@ export default function ({
         }),
         shader, {
           sourcemap: config.build.sourcemap && 'external',
-          minifyWhitespace: prod,
-          loader: 'text',
-          format: 'esm'
+          loader: 'text', format: 'esm',
+          minifyWhitespace: prod
         }
       );
-    },
-
-    handleHotUpdate ({ file, server }) {
-      watch && filter(file) &&
-        server.restart();
     }
   };
 }
