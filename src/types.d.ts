@@ -40,6 +40,19 @@ export type LoadingOptions = {
 };
 
 /**
+ * @typedef {Object}
+ * @name LoadingResult
+ * @description Output of the loaded and processed shader
+ * 
+ * @property {string}                 code   Shader file with included chunks
+ * @property {Map<string, string[]>}  deps   Map of shaders that import other chunks
+ */
+export type LoadingResult = {
+  code: string;
+  deps?: Record<string, string[]>;
+};
+
+/**
  * @since 0.2.0
  * @typedef {Object}
  * @name PluginOptions
