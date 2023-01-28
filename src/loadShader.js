@@ -302,10 +302,15 @@ function loadChunks (source, path, extension, warn, root) {
  *  - whether (and how) to compress output shader code
  *  - directory for chunk imports from root
  * 
- * @returns {LoadingResult} Output processed shader and dependencies
+ * @returns {LoadingOutput} Loaded, parsed (and compress)
+ * shader output and Map of shaders that import other chunks
  */
 export default function (source, shader, options) {
-  const { compress, defaultExtension, warnDuplicatedImports, root } = options;
+  const {
+    warnDuplicatedImports,
+    defaultExtension,
+    compress, root
+  } = options;
 
   resetSavedChunks();
 
@@ -314,11 +319,12 @@ export default function (source, shader, options) {
     warnDuplicatedImports, root
   );
 
-  const code = !compress ? output
-    : typeof compress === 'function'
-    ? compress(output) : comressShader(output);
-  
-  const deps = dependentChunks;
-
-  return { code, deps };
+  return {
+    dependentChunks,
+    outputShader: compress
+      ? typeof compress !== 'function'
+      ? comressShader(output)
+      : compress(output)
+      : output
+  };
 }

@@ -15,6 +15,11 @@ import type { LoadingOptions, LoadingResult } from './types.d';
  *  - whether (and how) to compress output shader code
  *  - directory for chunk imports from root
  * 
- * @returns {LoadingResult} Output processed shader and dependencies
+ * @returns {LoadingOutput} Loaded, parsed (and compress)
+ * shader output and Map of shaders that import other chunks
  */
-export default function (source: string, shader: string, options: LoadingOptions): LoadingResult;
+export default function (
+  source: string,
+  shader: string,
+  options: LoadingOptions
+): LoadingResult;

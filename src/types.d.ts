@@ -40,19 +40,6 @@ export type LoadingOptions = {
 };
 
 /**
- * @typedef {Object}
- * @name LoadingResult
- * @description Output of the loaded and processed shader
- * 
- * @property {string}                 code   Shader file with included chunks
- * @property {Map<string, string[]>}  deps   Map of shaders that import other chunks
- */
-export type LoadingResult = {
-  code: string;
-  deps?: Record<string, string[]>;
-};
-
-/**
  * @since 0.2.0
  * @typedef {Object}
  * @name PluginOptions
@@ -75,4 +62,19 @@ export type LoadingResult = {
 export type PluginOptions = Partial<LoadingOptions> & {
   include?: GlobPattern;
   exclude?: GlobPattern;
+};
+
+/**
+ * @since 1.1.2
+ * @typedef {Object}
+ * @name LoadingOutput
+ * @description Loaded, parsed (and compress) shader
+ * output and Map of shaders that import other chunks
+ * 
+ * @property {Map<string, string[]>} dependentChunks Map of shaders that import other chunks
+ * @property {string}                outputShader    Shader file with included chunks
+ */
+export type LoadingOutput = {
+  dependentChunks: Map<string, string[]>;
+  outputShader: string;
 };

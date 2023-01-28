@@ -53,8 +53,7 @@ export default function ({
     root = '/'
   } = {}
 ) {
-  let config = undefined;
-  let server;
+  let server = undefined, config = undefined;
   const filter = createFilter(include, exclude);
   const prod = process.env.NODE_ENV === 'production';
 
@@ -62,8 +61,8 @@ export default function ({
     enforce: 'pre',
     name: 'vite-plugin-glsl',
 
-    configureServer(_server) {
-      server = _server;
+    configureServer (devServer) {
+      server = devServer;
     },
 
     configResolved (resolvedConfig) {
@@ -73,57 +72,39 @@ export default function ({
     async transform (source, shader) {
       if (!filter(shader)) return;
 
-      const result = loadShader(source, shader, {
+      const { dependentChunks, outputShader } = loadShader(source, shader, {
         warnDuplicatedImports,
         defaultExtension,
         compress,
         root
       });
 
-      // use shader path as id
-      const id = shader;
-      // flatten all recursive dependencies 
-      const deps = Array.from(result.deps.values()).flat();
+      const { moduleGraph } = server ?? {};
+      const module = moduleGraph?.getModuleById(shader);
+      const chunks = Array.from(dependentChunks.values()).flat();
 
-      // dev
-      if (server) {
-        // server only logic for handling GLSL #include dependency hmr
-        const { moduleGraph } = server
-        const thisModule = moduleGraph.getModuleById(id)
-        if (thisModule) {
-          const isSelfAccepting = true;
-          if (deps) {
-            // record deps in the module graph so edits to the #include file
-            // can trigger main import to hot update
-            const depModules = new Set();
-            for (const file of deps) {
-              depModules.add(moduleGraph.createFileOnlyEntry(file));
-            }
-            moduleGraph.updateModuleInfo(
-              thisModule,
-              depModules,
-              null,
-              // The root proxy module is self-accepting and should not
-              // have an explicit accept list
-              new Set(),
-              null,
-              isSelfAccepting,
-              false,
-            )
-          } else {
-            thisModule.isSelfAccepting = isSelfAccepting
-          }
+      if (watch && module && !prod) {
+        if (!chunks.length) module.isSelfAccepting = true;
+
+        else {
+          const imported = new Set();
+
+          chunks.forEach(chunk => imported.add(
+            moduleGraph.createFileOnlyEntry(chunk)
+          ));
+
+          moduleGraph.updateModuleInfo(
+            module, imported, null,
+            new Set(), null, true
+          );
         }
       }
 
-      return await transformWithEsbuild(
-        result.code,
-        shader, {
-          sourcemap: config.build.sourcemap && 'external',
-          loader: 'text', format: 'esm',
-          minifyWhitespace: prod
-        }
-      );
+      return await transformWithEsbuild(outputShader, shader, {
+        sourcemap: config.build.sourcemap && 'external',
+        loader: 'text', format: 'esm',
+        minifyWhitespace: prod
+      });
     }
   };
 }
