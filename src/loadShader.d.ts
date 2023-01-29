@@ -1,4 +1,4 @@
-import type { LoadingOptions, LoadingResult } from './types.d';
+import type { LoadingOptions, LoadingOutput } from './types.d';
 
 /**
  * @function
@@ -22,4 +22,4 @@ export default function (
   source: string,
   shader: string,
   options: LoadingOptions
-): LoadingResult;
+): LoadingOutput;
