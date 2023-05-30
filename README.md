@@ -30,6 +30,20 @@ export default defineConfig({
 });
 ```
 
+### With TypeScript ###
+
+Add the following to your `tsconfig.json`:
+
+```json
+{
+  "compilerOptions": {
+    "types": [
+      "vite-plugin-glsl/ext"
+    ],
+  }
+}
+```
+
 ## Default Options ##
 
 ```js
