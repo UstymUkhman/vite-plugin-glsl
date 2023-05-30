@@ -32,16 +32,22 @@ export default defineConfig({
 
 ### With TypeScript ###
 
-Add the following to your `tsconfig.json`:
+Add extension declarations to your [`types`](https://www.typescriptlang.org/tsconfig#types) in `tsconfig.json`:
 
 ```json
 {
   "compilerOptions": {
     "types": [
       "vite-plugin-glsl/ext"
-    ],
+    ]
   }
 }
+```
+
+or as a [package dependency directive](https://www.typescriptlang.org/docs/handbook/triple-slash-directives.html#-reference-types-) to your global types:
+
+```ts
+/// <reference types="vite-plugin-glsl/ext" />
 ```
 
 ## Default Options ##
@@ -191,7 +197,7 @@ void main (void) {
 
 - Starting from `v1.0.0` this plugin is fully compatible with `vite^4.0.0`.
 
-- Starting from `v1.1.1` this plugin has a complete TypeScript support. You can add module declarations for shader files by using:<br />`/// <reference types="vite-plugin-glsl/ext" />`.
+- Starting from `v1.1.1` this plugin has a complete TypeScript support. Check "Usage" > "With TypeScript" for more info.
 
 ### Note: ###
 
