@@ -183,7 +183,7 @@ function checkIncludedDependencies (path, root) {
 
 /**
  * @function
- * @name comressShader
+ * @name compressShader
  * @description Compresses shader source code by
  * removing unnecessary whitespace and empty lines
  * 
@@ -192,7 +192,7 @@ function checkIncludedDependencies (path, root) {
  * 
  * @returns {string} Compressed shader's source code
  */
-function comressShader (shader, newLine = false) {
+function compressShader (shader, newLine = false) {
   return shader.replace(/\\(?:\r\n|\n\r|\n|\r)|\/\*.*?\*\/|\/\/(?:\\(?:\r\n|\n\r|\n|\r)|[^\n\r])*/g, '')
     .split(/\n+/).reduce((result, line) => {
       line = line.trim().replace(/\s{2,}|\t/, ' ');
@@ -323,7 +323,7 @@ export default function (source, shader, options) {
     dependentChunks,
     outputShader: compress
       ? typeof compress !== 'function'
-      ? comressShader(output)
+      ? compressShader(output)
       : compress(output)
       : output
   };
