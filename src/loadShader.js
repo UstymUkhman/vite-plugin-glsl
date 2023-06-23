@@ -174,8 +174,8 @@ function checkIncludedDependencies (path, root) {
     return true;
   }
 
-  dependencies?.forEach(dependency => recursiveDependency =
-    recursiveDependency || checkIncludedDependencies(dependency, root)
+  dependencies?.forEach(dependency => recursiveDependency ||=
+    checkIncludedDependencies(dependency, root)
   );
 
   return recursiveDependency;
