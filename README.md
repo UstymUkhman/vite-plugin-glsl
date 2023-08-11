@@ -6,7 +6,7 @@
 ![GitHub package.json version](https://img.shields.io/github/package-json/v/UstymUkhman/vite-plugin-glsl?color=brightgreen&style=flat-square)
 ![GitHub](https://img.shields.io/github/license/UstymUkhman/vite-plugin-glsl?color=brightgreen&style=flat-square)
 
-*Inspired by [threejs-glsl-loader](https://github.com/MONOGRID/threejs-glsl-loader) and [vite-plugin-string](https://github.com/aweikalee/vite-plugin-string), compatible with [three.js](https://threejs.org/) and [lygia](https://github.com/patriciogonzalezvivo/lygia).*
+_Inspired by [threejs-glsl-loader](https://github.com/MONOGRID/threejs-glsl-loader) and [vite-plugin-string](https://github.com/aweikalee/vite-plugin-string), compatible with [Babylon.js](https://www.babylonjs.com/), [three.js](https://threejs.org/) and [lygia](https://github.com/patriciogonzalezvivo/lygia)._
 
 ## Installation ##
 
@@ -107,7 +107,7 @@ void main (void) {
 ```glsl
 // chunk0.frag
 
-// ".glsl" extension will be set automatically:
+// ".glsl" extension will be added automatically:
 #include utils/chunk1;
 
 highp vec4 chunkFn () {
