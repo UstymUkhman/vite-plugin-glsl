@@ -173,31 +173,31 @@ void main (void) {
 
 ## Change Log ##
 
-- Starting from `v0.0.7` this plugin supports optional single and double quotation marks around file names.
-
-- Starting from `v0.0.9` this plugin supports optional semicolons at the end of `#include` statements.
-
-- Starting from `v0.1.0` this plugin supports WebGPU shaders with `.wgsl` extension.
-
-- Starting from `v0.1.2` this plugin generates sourcemaps using vite esbuild when the `sourcemap` [option](https://github.com/UstymUkhman/vite-plugin-glsl/blob/main/vite.config.js#L5) is set to `true`.
-
-- Starting from `v0.1.5` this plugin warns about duplicated chunks imports and throws an error when a recursive loop occurres.
-
-- Starting from `v0.2.0` this plugin uses a config object as a single argument to `glsl` function and allows to disable import warnings with the `warnDuplicatedImports` param set to `false`.
-
-- Starting from `v0.2.2` this plugin supports `compress` option to optimize output shader length. You might consider setting this to `true` in production environment.
-
-- Starting from `v0.3.0` this plugin is pure [ESM](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Modules). Consider updating your project to an ESM module by adding `"type": "module"` in your `package.json` or consult [this](https://github.com/UstymUkhman/vite-plugin-glsl/issues/16) issue for possible workarounds.
-
-- Starting from `v0.4.0` this plugin supports chunk imports from project root and `root` option to override the default root directory.
-
-- Starting from `v0.5.0` this plugin supports shaders hot reloading when `watch` option is set to `true`.
-
-- Starting from `v0.5.4` this plugin supports custom `compress` callback function to optimize output shader length after all shader chunks have been included.
+- Starting from `v1.1.1` this plugin has a complete TypeScript support. Check "Usage" > "With TypeScript" for more info.
 
 - Starting from `v1.0.0` this plugin is fully compatible with `vite^4.0.0`.
 
-- Starting from `v1.1.1` this plugin has a complete TypeScript support. Check "Usage" > "With TypeScript" for more info.
+- Starting from `v0.5.4` this plugin supports custom `compress` callback function to optimize output shader length after all shader chunks have been included.
+
+- Starting from `v0.5.0` this plugin supports shaders hot reloading when `watch` option is set to `true`.
+
+- Starting from `v0.4.0` this plugin supports chunk imports from project root and `root` option to override the default root directory.
+
+- Starting from `v0.3.0` this plugin is pure [ESM](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Modules). Consider updating your project to an ESM module by adding `"type": "module"` in your `package.json` or consult [this](https://github.com/UstymUkhman/vite-plugin-glsl/issues/16) issue for possible workarounds.
+
+- Starting from `v0.2.2` this plugin supports `compress` option to optimize output shader length. You might consider setting this to `true` in production environment.
+
+- Starting from `v0.2.0` this plugin uses a config object as a single argument to `glsl` function and allows to disable import warnings with the `warnDuplicatedImports` param set to `false`.
+
+- Starting from `v0.1.5` this plugin warns about duplicated chunks imports and throws an error when a recursive loop occurres.
+
+- Starting from `v0.1.2` this plugin generates sourcemaps using vite esbuild when the `sourcemap` [option](https://github.com/UstymUkhman/vite-plugin-glsl/blob/main/vite.config.js#L5) is set to `true`.
+
+- Starting from `v0.1.0` this plugin supports WebGPU shaders with `.wgsl` extension.
+
+- Starting from `v0.0.9` this plugin supports optional semicolons at the end of `#include` statements.
+
+- Starting from `v0.0.7` this plugin supports optional single and double quotation marks around file names.
 
 ### Note: ###
 
