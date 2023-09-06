@@ -51,7 +51,8 @@ const duplicatedChunks = new Map();
  * @description RegEx to match GLSL
  * `#include` preprocessor instruction
  */
-const include = /#include(\s+([^\s<>]+));?/gi;
+const includeRegex = /#include(\s+([^\s<>]+));?/gi;
+const importRegex = /@import\s(.*?)(;|\n)/gi;
 
 /**
  * @function
@@ -239,11 +240,14 @@ function loadChunks (source, path, extension, warn, root) {
   let directory = dirname(unixPath);
   allChunks.add(unixPath);
 
-  if (include.test(source)) {
+  // @import to include
+  source = source.replace(importRegex, '#include "$1";');
+
+  if (includeRegex.test(source)) {
     dependentChunks.set(unixPath, []);
     const currentDirectory = directory;
 
-    source = source.replace(include, (_, chunkPath) => {
+    source = source.replace(includeRegex, (_, chunkPath) => {
       chunkPath = chunkPath.trim().replace(/^(?:"|')?|(?:"|')?;?$/gi, '');
 
       if (!chunkPath.indexOf('/')) {
