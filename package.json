@@ -2,11 +2,11 @@
   "name": "vite-plugin-glsl",
   "description": "Import, inline (and compress) GLSL shader files",
   "homepage": "https://github.com/UstymUkhman/vite-plugin-glsl#readme",
-  "packageManager": "^npm@9.2.0",
+  "packageManager": "^npm@9.8.0",
   "types": "./src/index.d.ts",
   "module": "./src/index.js",
   "main": "./src/index.js",
-  "version": "1.1.2",
+  "version": "1.2.0",
   "private": false,
   "license": "MIT",
   "type": "module",
@@ -61,7 +61,7 @@
     "@rollup/pluginutils": "^5.0.2"
   },
   "devDependencies": {
-    "vite": "^4.0.4"
+    "vite": "^5.0.2"
   },
   "engines": {
     "node": ">= 16.15.1",
