@@ -193,6 +193,8 @@ function checkIncludedDependencies (path, root) {
  * @returns {string} Compressed shader's source code
  */
 function compressShader (shader, newLine = false) {
+  shader = removeSourceComments(shader);
+
   return shader.replace(/\\(?:\r\n|\n\r|\n|\r)|\/\*.*?\*\/|\/\/(?:\\(?:\r\n|\n\r|\n|\r)|[^\n\r])*/g, '')
     .split(/\n+/).reduce((result, line) => {
       line = line.trim().replace(/\s{2,}|\t/, ' ');
@@ -235,7 +237,6 @@ function loadChunks (source, path, extension, warn, root) {
     return recursiveChunk;
   }
 
-  source = removeSourceComments(source);
   let directory = dirname(unixPath);
   allChunks.add(unixPath);
 

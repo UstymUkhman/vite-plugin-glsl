@@ -27,7 +27,7 @@ type Compress = boolean | ((shader: string) => string);
  * 
  * @property {boolean}  warnDuplicatedImports Warn if the same chunk was imported multiple times
  * @property {string}   defaultExtension      Shader suffix when no extension is specified
- * @property {Compress} compress              Compress output shader code
+ * @property {Compress} compress              Compress output shader code and remove comments
  * @property {boolean}  watch                 Recompile shader on change
  * @property {string}   root                  Directory for root imports
  */

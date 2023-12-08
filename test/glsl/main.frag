@@ -4,6 +4,12 @@ precision highp float;
 
 out highp vec4 fragColor;
 
+/*
+* multilines comments
+*/
+
+// one line comment
+
 void main (void) {
   fragColor = chunkFn();
 }
