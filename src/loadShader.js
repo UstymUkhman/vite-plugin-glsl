@@ -197,6 +197,8 @@ function compressShader (shader, newLine = false) {
     .split(/\n+/).reduce((result, line) => {
       line = line.trim().replace(/\s{2,}|\t/, ' ');
 
+      if (/@(vertex|fragment)/.test(line)) line += ' ';
+
       if (line[0] === '#') {
         newLine && result.push('\n');
         result.push(line, '\n');
@@ -226,6 +228,7 @@ function compressShader (shader, newLine = false) {
  * @param {string}  root      Shader's root directory
  * 
  * @throws {Error}   If shader chunks started a recursion loop
+ * 
  * @returns {string} Shader's source code without external chunks
  */
 function loadChunks (source, path, extension, warn, root) {
@@ -278,7 +281,7 @@ function loadChunks (source, path, extension, warn, root) {
     const caller = getRecursionCaller();
     const recursiveChunk = resetSavedChunks();
 
-    throw Error(
+    throw new Error(
       `Recursion detected when importing '${recursiveChunk}' in '${caller}'.`
     );
   }
