@@ -39,9 +39,9 @@ const DEFAULT_SHADERS = Object.freeze([
  * @see {@link https://vitejs.dev/guide/api-plugin.html}
  * @link https://github.com/UstymUkhman/vite-plugin-glsl
  * 
- * @param {PluginOptions} options Plugin config object
+ * @param {import('./types').PluginOptions} options Plugin config object
  * 
- * @returns {Plugin} Vite plugin that converts shader code
+ * @returns {import('vite').Plugin} Vite plugin that converts shader code
  */
 export default function ({
     include = DEFAULT_SHADERS,
@@ -53,7 +53,7 @@ export default function ({
     root = '/'
   } = {}
 ) {
-  let server = undefined, config = undefined;
+  let sourcemap = false;
   const filter = createFilter(include, exclude);
   const prod = process.env.NODE_ENV === 'production';
 
@@ -61,12 +61,8 @@ export default function ({
     enforce: 'pre',
     name: 'vite-plugin-glsl',
 
-    configureServer (devServer) {
-      server = devServer;
-    },
-
     configResolved (resolvedConfig) {
-      config = resolvedConfig;
+      sourcemap = resolvedConfig.build.sourcemap;
     },
 
     async transform (source, shader) {
@@ -79,29 +75,13 @@ export default function ({
         root
       });
 
-      const { moduleGraph } = server ?? {};
-      const module = moduleGraph?.getModuleById(shader);
-      const chunks = Array.from(dependentChunks.values()).flat();
-
-      if (watch && module && !prod) {
-        if (!chunks.length) module.isSelfAccepting = true;
-
-        else {
-          const imported = new Set();
-
-          chunks.forEach(chunk => imported.add(
-            moduleGraph.createFileOnlyEntry(chunk)
-          ));
-
-          moduleGraph.updateModuleInfo(
-            module, imported, null,
-            new Set(), null, true
-          );
-        }
+      if (watch && !prod) {
+        const chunks = Array.from(dependentChunks.values()).flat();
+        chunks.forEach(chunk => this.addWatchFile(chunk));
       }
 
       return await transformWithEsbuild(outputShader, shader, {
-        sourcemap: config.build.sourcemap && 'external',
+        sourcemap: sourcemap && 'external',
         loader: 'text', format: 'esm',
         minifyWhitespace: prod
       });
