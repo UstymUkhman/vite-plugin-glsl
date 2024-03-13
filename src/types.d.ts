@@ -28,14 +28,12 @@ type Compress = boolean | ((shader: string) => string);
  * @property {boolean}  warnDuplicatedImports Warn if the same chunk was imported multiple times
  * @property {string}   defaultExtension      Shader suffix when no extension is specified
  * @property {Compress} compress              Compress output shader code
- * @property {boolean}  watch                 Recompile shader on change
  * @property {string}   root                  Directory for root imports
  */
 export type LoadingOptions = {
   warnDuplicatedImports: boolean;
   defaultExtension: string;
   compress: Compress;
-  watch: boolean;
   root: string;
 };
 
@@ -46,8 +44,9 @@ export type LoadingOptions = {
  * @extends LoadingOptions
  * @description Plugin config object
  * 
- * @property {GlobPattern} Glob pattern(s array) to import
- * @property {GlobPattern} Glob pattern(s array) to ignore
+ * @property {GlobPattern} include Glob pattern(s array) to import
+ * @property {GlobPattern} exclude Glob pattern(s array) to ignore
+ * @property {boolean}     watch   Recompile shader on change
  * 
  * @default {
  *   exclude: undefined,
@@ -62,6 +61,7 @@ export type LoadingOptions = {
 export type PluginOptions = Partial<LoadingOptions> & {
   include?: GlobPattern;
   exclude?: GlobPattern;
+  watch?: boolean;
 };
 
 /**

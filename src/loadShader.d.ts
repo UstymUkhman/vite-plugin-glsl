@@ -10,12 +10,12 @@ import type { LoadingOptions, LoadingOutput } from './types.d';
  * @param {string}         shader  Shader's absolute path
  * @param {LoadingOptions} options Configuration object to define:
  * 
- *  - warn if the same chunk was imported multiple times
- *  - default shader extension when no extension is specified
- *  - whether (and how) to compress output shader code
- *  - directory for chunk imports from root
+ *  - Warn if the same chunk was imported multiple times
+ *  - Shader suffix when no extension is specified
+ *  - Compress output shader code
+ *  - Directory for root imports
  * 
- * @returns {LoadingOutput} Loaded, parsed (and compress)
+ * @returns {LoadingOutput} Loaded, parsed (and compressed)
  * shader output and Map of shaders that import other chunks
  */
 export default function (
