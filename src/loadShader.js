@@ -117,11 +117,12 @@ function checkDuplicatedImports (path) {
  * @description Removes comments from shader source
  * code in order to avoid including commented chunks
  * 
- * @param {string} source Shader's source code
+ * @param {string}  source Shader's source code
+ * @param {boolean} triple Remove comments starting with `///`
  * 
  * @returns {string} Shader's source code without comments
  */
-function removeSourceComments (source) {
+function removeSourceComments (source, triple = false) {
   if (source.includes('/*') && source.includes('*/')) {
     source = source.slice(0, source.indexOf('/*')) +
     source.slice(source.indexOf('*/') + 2, source.length);
@@ -130,7 +131,10 @@ function removeSourceComments (source) {
   const lines = source.split('\n');
 
   for (let l = lines.length; l--; ) {
-    if (lines[l].includes('//')) {
+    const index = lines[l].indexOf('//');
+
+    if (index > -1) {
+      if (lines[l][index + 2] === '/' && !include.test(lines[l]) && !triple) continue;
       lines[l] = lines[l].slice(0, lines[l].indexOf('//'));
     }
   }
@@ -317,10 +321,8 @@ export default function (source, shader, options) {
 
   resetSavedChunks();
 
-  const output = loadChunks(
-    source, shader, defaultExtension,
-    warnDuplicatedImports, root
-  );
+  let output = loadChunks(source, shader, defaultExtension, warnDuplicatedImports, root);
+  output = compress ? removeSourceComments(output, true) : output;
 
   return {
     dependentChunks,

@@ -2,7 +2,7 @@
  * @module vite-plugin-glsl
  * @author Ustym Ukhman <ustym.ukhman@gmail.com>
  * @description Import, inline (and compress) GLSL shader files
- * @version 1.2.1
+ * @version 1.3.0
  * @license MIT
  */
 

@@ -1,3 +1,3 @@
-highp float chunkGreen () {
+float chunkGreen () {
   return 0.8;
 }

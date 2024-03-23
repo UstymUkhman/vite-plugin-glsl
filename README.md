@@ -93,11 +93,17 @@ import fragment from './glsl/main.frag';
 
 ```glsl
 // main.frag
-precision highp float;
+#version 300 es
+
+#ifndef GL_FRAGMENT_PRECISION_HIGH
+	precision mediump float;
+#else
+	precision highp float;
+#endif
+
+out vec4 fragColor;
 
 #include chunk0.frag;
-
-out highp vec4 fragColor;
 
 void main (void) {
   fragColor = chunkFn();
@@ -110,7 +116,7 @@ void main (void) {
 // ".glsl" extension will be added automatically:
 #include utils/chunk1;
 
-highp vec4 chunkFn () {
+vec4 chunkFn () {
   return vec4(chunkRGB(), 1.0);
 }
 ```
@@ -121,7 +127,7 @@ highp vec4 chunkFn () {
 #include chunk2.frag;
 #include ../chunk3.frag;
 
-highp vec3 chunkRGB () {
+vec3 chunkRGB () {
   return vec3(chunkRed(), chunkGreen(), 0.0);
 }
 ```
@@ -129,7 +135,7 @@ highp vec3 chunkRGB () {
 ```glsl
 // utils/chunk2.frag
 
-highp float chunkRed () {
+float chunkRed () {
   return 0.0;
 }
 ```
@@ -137,7 +143,7 @@ highp float chunkRed () {
 ```glsl
 // chunk3.frag
 
-highp float chunkGreen () {
+float chunkGreen () {
   return 0.8;
 }
 ```
@@ -146,25 +152,31 @@ Will result in:
 
 ```glsl
 // main.frag
-precision highp float;
+#version 300 es
 
-highp float chunkRed () {
+#ifndef GL_FRAGMENT_PRECISION_HIGH
+	precision mediump float;
+#else
+	precision highp float;
+#endif
+
+out vec4 fragColor;
+
+float chunkRed () {
   return 0.0;
 }
 
-highp float chunkGreen () {
+float chunkGreen () {
   return 0.8;
 }
 
-highp vec3 chunkRGB () {
+vec3 chunkRGB () {
   return vec3(chunkRed(), chunkGreen(), 0.0);
 }
 
-highp vec4 chunkFn () {
+vec4 chunkFn () {
   return vec4(chunkRGB(), 1.0);
 }
-
-out highp vec4 fragColor;
 
 void main (void) {
   fragColor = chunkFn();
@@ -172,6 +184,8 @@ void main (void) {
 ```
 
 ## Change Log ##
+
+- Starting from `v1.3.0` this plugin will not remove comments starting with `///`, unless `compress` option is set to `true`.
 
 - Starting from `v1.2.0` this plugin is fully compatible with `vite^5.0.0`.
 
@@ -206,8 +220,6 @@ void main (void) {
 When used with [three.js](https://github.com/mrdoob/three.js) r0.99 and higher, it's possible to include shader chunks as specified in the [documentation](https://threejs.org/docs/index.html?q=Shader#api/en/materials/ShaderMaterial), those imports will be ignored by `vite-plugin-glsl` since they are handled internally by the library itself:
 
 ```glsl
-precision highp float;
-
 #include <common>
 
 vec3 randVec3 (const in vec2 uv) {
