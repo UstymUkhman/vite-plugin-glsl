@@ -6,7 +6,7 @@
 ![GitHub package.json version](https://img.shields.io/github/package-json/v/UstymUkhman/vite-plugin-glsl?color=brightgreen&style=flat-square)
 ![GitHub](https://img.shields.io/github/license/UstymUkhman/vite-plugin-glsl?color=brightgreen&style=flat-square)
 
-_Inspired by [threejs-glsl-loader](https://github.com/MONOGRID/threejs-glsl-loader) and [vite-plugin-string](https://github.com/aweikalee/vite-plugin-string), compatible with [Babylon.js](https://www.babylonjs.com/), [three.js](https://threejs.org/) and [lygia](https://github.com/patriciogonzalezvivo/lygia)._
+_Inspired by [threejs-glsl-loader](https://github.com/MONOGRID/threejs-glsl-loader) and [vite-plugin-string](https://github.com/aweikalee/vite-plugin-string), compatible with [Babylon.js](https://www.babylonjs.com/), [three.js](https://threejs.org/) and [lygia](https://lygia.xyz/)._
 
 ## Installation ##
 
@@ -16,6 +16,8 @@ npm i vite-plugin-glsl --save-dev
 yarn add vite-plugin-glsl --dev
 # or
 pnpm add -D vite-plugin-glsl
+# or
+bun add vite-plugin-glsl --dev
 ```
 
 ## Usage ##
@@ -68,7 +70,7 @@ glsl({
 })
 ```
 
-### Example ###
+## Example ##
 
 ```
 root
