@@ -201,7 +201,7 @@ function compressShader (shader, newLine = false) {
     .split(/\n+/).reduce((result, line) => {
       line = line.trim().replace(/\s{2,}|\t/, ' ');
 
-      if (/@(vertex|fragment)/.test(line) || line.endsWith('return')) line += ' ';
+      if (/@(vertex|fragment|compute)/.test(line) || line.endsWith('return')) line += ' ';
 
       if (line[0] === '#') {
         newLine && result.push('\n');

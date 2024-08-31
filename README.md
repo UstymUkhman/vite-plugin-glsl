@@ -98,9 +98,9 @@ import fragment from './glsl/main.frag';
 #version 300 es
 
 #ifndef GL_FRAGMENT_PRECISION_HIGH
-	precision mediump float;
+  precision mediump float;
 #else
-	precision highp float;
+  precision highp float;
 #endif
 
 out vec4 fragColor;
@@ -157,9 +157,9 @@ Will result in:
 #version 300 es
 
 #ifndef GL_FRAGMENT_PRECISION_HIGH
-	precision mediump float;
+  precision mediump float;
 #else
-	precision highp float;
+  precision highp float;
 #endif
 
 out vec4 fragColor;
