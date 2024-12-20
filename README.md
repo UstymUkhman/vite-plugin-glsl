@@ -187,6 +187,8 @@ void main (void) {
 
 ## Change Log ##
 
+- Starting from `v1.3.1` this plugin is fully compatible with `vite^6.0.0`.
+
 - Starting from `v1.3.0` this plugin will not remove comments starting with `///`, unless `compress` option is set to `true`.
 
 - Starting from `v1.2.0` this plugin is fully compatible with `vite^5.0.0`.

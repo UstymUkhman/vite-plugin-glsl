@@ -10,6 +10,11 @@
   "private": false,
   "license": "MIT",
   "type": "module",
+  "author": {
+    "name": "Ustym Ukhman",
+    "email": "ustym.ukhman@gmail.com",
+    "url": "https://github.com/UstymUkhman/"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/UstymUkhman/vite-plugin-glsl.git"
@@ -18,10 +23,10 @@
     "url": "https://github.com/UstymUkhman/vite-plugin-glsl/issues",
     "email": "ustym.ukhman@gmail.com"
   },
-  "author": {
-    "name": "Ustym Ukhman",
-    "email": "ustym.ukhman@gmail.com",
-    "url": "https://github.com/UstymUkhman/"
+  "publishConfig": {
+    "save-dev": true,
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
   },
   "exports": {
     ".": "./src/index.js",
