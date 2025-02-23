@@ -2,7 +2,7 @@
  * @module vite-plugin-glsl
  * @author Ustym Ukhman <ustym.ukhman@gmail.com>
  * @description Import, inline (and compress) GLSL shader files
- * @version 1.3.1
+ * @version 1.3.2
  * @license MIT
  */
 
@@ -47,6 +47,7 @@ export default function ({
     include = DEFAULT_SHADERS,
     exclude = undefined,
     warnDuplicatedImports = true,
+    removeDuplicatedImports = false,
     defaultExtension = DEFAULT_EXTENSION,
     compress = false,
     watch = true,
@@ -69,16 +70,15 @@ export default function ({
       if (!filter(shader)) return;
 
       const { dependentChunks, outputShader } = loadShader(source, shader, {
+        removeDuplicatedImports,
         warnDuplicatedImports,
         defaultExtension,
         compress,
         root
       });
 
-      if (watch && !prod) {
-        const chunks = Array.from(dependentChunks.values()).flat();
-        chunks.forEach(chunk => this.addWatchFile(chunk));
-      }
+      watch && !prod && Array.from(dependentChunks.values())
+        .flat().forEach(chunk => this.addWatchFile(chunk));
 
       return await transformWithEsbuild(outputShader, shader, {
         sourcemap: sourcemap && 'external',

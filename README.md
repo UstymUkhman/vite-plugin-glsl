@@ -56,17 +56,18 @@ or as a [package dependency directive](https://www.typescriptlang.org/docs/handb
 
 ```js
 glsl({
-  include: [                   // Glob pattern, or array of glob patterns to import
+  include: [                      // Glob pattern, or array of glob patterns to import
     '**/*.glsl', '**/*.wgsl',
     '**/*.vert', '**/*.frag',
     '**/*.vs', '**/*.fs'
   ],
-  exclude: undefined,          // Glob pattern, or array of glob patterns to ignore
-  warnDuplicatedImports: true, // Warn if the same chunk was imported multiple times
-  defaultExtension: 'glsl',    // Shader suffix when no extension is specified
-  compress: false,             // Compress output shader code
-  watch: true,                 // Recompile shader on change
-  root: '/'                    // Directory for root imports
+  exclude: undefined,             // Glob pattern, or array of glob patterns to ignore
+  warnDuplicatedImports: true,    // Warn if the same chunk was imported multiple times
+  removeDuplicatedImports: false, // Automatically remove an already imported chunk
+  defaultExtension: 'glsl',       // Shader suffix when no extension is specified
+  compress: false,                // Compress output shader code
+  watch: true,                    // Recompile shader on change
+  root: '/'                       // Directory for root imports
 })
 ```
 
@@ -186,6 +187,8 @@ void main (void) {
 ```
 
 ## Change Log ##
+
+- Starting from `v1.3.2` this plugin allows to automatically remove already imported chunks with the `removeDuplicatedImports` option set to `true`.
 
 - Starting from `v1.3.1` this plugin is fully compatible with `vite^6.0.0`.
 
