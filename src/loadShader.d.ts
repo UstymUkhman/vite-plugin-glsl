@@ -11,6 +11,7 @@ import type { LoadingOptions, LoadingOutput } from './types.d';
  * @param {LoadingOptions} options Configuration object to define:
  * 
  *  - Warn if the same chunk was imported multiple times
+ *  - Automatically remove an already imported chunk
  *  - Shader suffix when no extension is specified
  *  - Compress output shader code
  *  - Directory for root imports
@@ -19,7 +20,6 @@ import type { LoadingOptions, LoadingOutput } from './types.d';
  * shader output and Map of shaders that import other chunks
  */
 export default function (
-  source: string,
-  shader: string,
+  source: string, shader: string,
   options: LoadingOptions
 ): LoadingOutput;

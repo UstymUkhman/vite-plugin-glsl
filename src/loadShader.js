@@ -95,7 +95,6 @@ function getRecursionCaller () {
  * @throws {Warning} If shader chunk was already included
  */
 function checkDuplicatedImports (path) {
-  if (!allChunks.has(path)) return;
   const caller = getRecursionCaller();
 
   const chunks = duplicatedChunks.get(caller) ?? [];
@@ -147,14 +146,21 @@ function removeSourceComments (source, triple = false) {
  * @name checkRecursiveImports
  * @description Checks if shader dependencies
  * have caused a recursion error or warning
+ * ignoring duplicate chunks if required
  * 
- * @param {string}  path Shader's absolute path
- * @param {boolean} warn Check already included chunks
+ * @param {string}  path   Shader's absolute path
+ * @param {boolean} warn   Check already included chunks
+ * @param {boolean} ignore Ignore already included chunks
  * 
- * @returns {boolean} Import recursion has occurred
+ * @returns {boolean | null} Import recursion has occurred
+ * or chunk was ignored because of `ignore` argument
  */
-function checkRecursiveImports (path, warn) {
-  warn && checkDuplicatedImports(path);
+function checkRecursiveImports (path, warn, ignore) {
+  if (allChunks.has(path)) {
+    if (ignore) return null;
+    warn && checkDuplicatedImports(path);
+  }
+
   return checkIncludedDependencies(path, path);
 }
 
@@ -225,22 +231,25 @@ function compressShader (shader, newLine = false) {
  * @description Includes shader's dependencies
  * and removes comments from the source code
  * 
- * @param {string}  source    Shader's source code
- * @param {string}  path      Shader's absolute path
- * @param {string}  extension Default shader extension
- * @param {boolean} warn      Check already included chunks
- * @param {string}  root      Shader's root directory
+ * @param {string}  source  Shader's source code
+ * @param {string}  path    Shader's absolute path
+ * @param {Options} options Shader loading config object
  * 
- * @throws {Error}   If shader chunks started a recursion loop
+ * @throws {Error} If shader chunks started a recursion loop
  * 
  * @returns {string} Shader's source code without external chunks
  */
-function loadChunks (source, path, extension, warn, root) {
+function loadChunks (source, path, options) {
+  const { warnDuplicatedImports, removeDuplicatedImports } = options;
   const unixPath = path.split(sep).join(posix.sep);
 
-  if (checkRecursiveImports(unixPath, warn)) {
-    return recursiveChunk;
-  }
+  const recursion = checkRecursiveImports(
+    unixPath, warnDuplicatedImports,
+    removeDuplicatedImports
+  );
+
+  if (recursion) return recursiveChunk;
+  else if (recursion === null) return;
 
   source = removeSourceComments(source);
   let directory = dirname(unixPath);
@@ -249,13 +258,14 @@ function loadChunks (source, path, extension, warn, root) {
   if (include.test(source)) {
     dependentChunks.set(unixPath, []);
     const currentDirectory = directory;
+    const ext = options.defaultExtension;
 
     source = source.replace(include, (_, chunkPath) => {
       chunkPath = chunkPath.trim().replace(/^(?:"|')?|(?:"|')?;?$/gi, '');
 
       if (!chunkPath.indexOf('/')) {
         const base = cwd().split(sep).join(posix.sep);
-        chunkPath = base + root + chunkPath;
+        chunkPath = base + options.root + chunkPath;
       }
 
       const directoryIndex = chunkPath.lastIndexOf('/');
@@ -267,16 +277,14 @@ function loadChunks (source, path, extension, warn, root) {
       }
 
       let shader = resolve(directory, chunkPath);
-
-      if (!extname(shader)) shader = `${shader}.${extension}`;
+      if (!extname(shader)) shader = `${shader}.${ext}`;
 
       const shaderPath = shader.split(sep).join(posix.sep);
       dependentChunks.get(unixPath)?.push(shaderPath);
 
       return loadChunks(
         readFileSync(shader, 'utf8'),
-        shader, extension,
-        warn, root
+        shader, options
       );
     });
   }
@@ -296,32 +304,29 @@ function loadChunks (source, path, extension, warn, root) {
 /**
  * @function
  * @name loadShader
- * @description Iterates through all external chunks,
- * includes them into the shader's source code
- * and optionally compresses the output
+ * @typedef {import('./types').LoadingOptions} Options
+ * @description Iterates through all external chunks, includes them
+ * into the shader's source code and optionally compresses the output
  * 
- * @param {string}         source  Shader's source code
- * @param {string}         shader  Shader's absolute path
- * @param {LoadingOptions} options Configuration object to define:
+ * @param {string}  source  Shader's source code
+ * @param {string}  shader  Shader's absolute path
+ * @param {Options} options Configuration object to define:
  * 
  *  - Warn if the same chunk was imported multiple times
+ *  - Automatically remove an already imported chunk
  *  - Shader suffix when no extension is specified
  *  - Compress output shader code
  *  - Directory for root imports
  * 
- * @returns {LoadingOutput} Loaded, parsed (and compress)
+ * @returns {LoadingOutput} Loaded, parsed (and compressed)
  * shader output and Map of shaders that import other chunks
  */
 export default function (source, shader, options) {
-  const {
-    warnDuplicatedImports,
-    defaultExtension,
-    compress, root
-  } = options;
+  const { compress, ...config } = options;
 
   resetSavedChunks();
 
-  let output = loadChunks(source, shader, defaultExtension, warnDuplicatedImports, root);
+  let output = loadChunks(source, shader, config);
   output = compress ? removeSourceComments(output, true) : output;
 
   return {
