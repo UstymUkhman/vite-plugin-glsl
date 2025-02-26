@@ -249,7 +249,7 @@ function loadChunks (source, path, options) {
   );
 
   if (recursion) return recursiveChunk;
-  else if (recursion === null) return;
+  else if (recursion === null) return '';
 
   source = removeSourceComments(source);
   let directory = dirname(unixPath);
