@@ -1,3 +1,5 @@
+import { SpglslAngleCompileOptions } from "spglsl";
+
 /** @typedef {string | string[]} GlobPattern */
 export type GlobPattern = string | string[];
 
@@ -57,6 +59,7 @@ export type PluginOptions = Partial<LoadingOptions> & {
   include?: GlobPattern;
   exclude?: GlobPattern;
   watch?: boolean;
+  spglslOptions: SpglslAngleCompileOptions | undefined;
 };
 
 /**

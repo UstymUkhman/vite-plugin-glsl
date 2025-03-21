@@ -9,6 +9,7 @@
 import { createFilter } from '@rollup/pluginutils';
 import { transformWithEsbuild } from 'vite';
 import loadShader from './loadShader.js';
+import { spglslAngleCompile } from 'spglsl';
 
 /**
  * @const
@@ -51,7 +52,8 @@ export default function ({
     defaultExtension = DEFAULT_EXTENSION,
     compress = false,
     watch = true,
-    root = '/'
+    root = '/',
+    spglslOptions = undefined
   } = {}
 ) {
   let sourcemap = false;
@@ -77,10 +79,23 @@ export default function ({
         root
       });
 
+      let processedOutput = outputShader;
+      const is_glsl = shader.endsWith("glsl") || shader.endsWith("vert") || shader.endsWith("frag");
+      if (is_glsl && spglslOptions) {
+        const spglslOutput = await spglslAngleCompile({
+          compileMode: "Optimize",
+          mangle: spglslOptions.mangle,
+          mainSourceCode: outputShader,
+          minify: spglslOptions.minify,
+          optimize: spglslOptions.optimize
+        });
+        processedOutput = spglslOutput.output;
+      }
+
       watch && !prod && Array.from(dependentChunks.values())
         .flat().forEach(chunk => this.addWatchFile(chunk));
 
-      return await transformWithEsbuild(outputShader, shader, {
+      return await transformWithEsbuild(processedOutput, shader, {
         sourcemap: sourcemap && 'external',
         loader: 'text', format: 'esm',
         minifyWhitespace: prod

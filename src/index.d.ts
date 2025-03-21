@@ -21,5 +21,6 @@ export default function ({
   defaultExtension,
   compress,
   watch,
-  root
+  root,
+  spglslOptions
 }?: PluginOptions): Plugin;
