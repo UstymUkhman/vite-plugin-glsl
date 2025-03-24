@@ -20,6 +20,7 @@ export default function ({
   removeDuplicatedImports,
   defaultExtension,
   compress,
+  onOutput,
   watch,
   root
 }?: PluginOptions): Plugin;

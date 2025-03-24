@@ -50,6 +50,7 @@ export default function ({
     removeDuplicatedImports = false,
     defaultExtension = DEFAULT_EXTENSION,
     compress = false,
+    onOutput = undefined,
     watch = true,
     root = '/'
   } = {}
@@ -69,13 +70,18 @@ export default function ({
     async transform (source, shader) {
       if (!filter(shader)) return;
 
-      const { dependentChunks, outputShader } = loadShader(source, shader, {
+      let { dependentChunks, outputShader } = loadShader(source, shader, {
         removeDuplicatedImports,
         warnDuplicatedImports,
         defaultExtension,
         compress,
         root
       });
+
+
+      if(onOutput) {
+        outputShader = await Promise.resolve(onOutput(outputShader, shader));
+      }
 
       watch && !prod && Array.from(dependentChunks.values())
         .flat().forEach(chunk => this.addWatchFile(chunk));
