@@ -14,6 +14,21 @@ export type GlobPattern = string | string[];
  */
 type Compress = boolean | ((shader: string) => string);
 
+
+/**
+ * @default undefined
+ * @typedef {undefined | ((shader: string, file: string) => string) | ((shader: string, file: string) => Promise<string>)} OutputCallback
+ * 
+ * @description Undefined or custom callback
+ * function to modify output shader (Runs before Compress)
+ * 
+ * @param {string} shader Shader code with included chunks
+ * @param {string} file Shader file path
+ * 
+ * @returns {string} Modfied shader's source code
+ */
+type OutputCallback = undefined | ((shader: string, file: string) => string) | ((shader: string, file: string) => Promise<string>);
+
 /**
  * @typedef {Object} LoadingOptions
  * @description Shader loading config object
@@ -22,6 +37,7 @@ type Compress = boolean | ((shader: string) => string);
  * @property {boolean}  removeDuplicatedImports Automatically remove an already imported chunk
  * @property {string}   defaultExtension        Shader suffix when no extension is specified
  * @property {Compress} compress                Compress output shader code
+ * @property {OutputCallback} onOutput                Compress output shader code
  * @property {string}   root                    Directory for root imports
  */
 export type LoadingOptions = {
@@ -29,6 +45,7 @@ export type LoadingOptions = {
   removeDuplicatedImports: boolean;
   defaultExtension: string;
   compress: Compress;
+  onOutput: OutputCallback;
   root: string;
 };
 
