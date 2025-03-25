@@ -1,18 +1,21 @@
 /** @typedef {string | string[]} GlobPattern */
 export type GlobPattern = string | string[];
 
+/** @typedef {string | string[]} Callback */
+type Callback = (shader: string) => string;
+
 /**
  * @default false
- * @typedef {boolean | ((shader: string) => string)} Compress
+ * @typedef {boolean | Callback | Promise<Callback>} Compress
  * 
  * @description Boolean value or custom callback
- * function to optimize output shader length
+ * promise / function to optimize output shader length
  * 
  * @param {string} shader Shader code with included chunks
  * 
  * @returns {string} Compressed shader's source code
  */
-type Compress = boolean | ((shader: string) => string);
+type Compress = boolean | Callback | Promise<Callback>;
 
 /**
  * @typedef {Object} LoadingOptions

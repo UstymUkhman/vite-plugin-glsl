@@ -69,7 +69,7 @@ export default function ({
     async transform (source, shader) {
       if (!filter(shader)) return;
 
-      const { dependentChunks, outputShader } = loadShader(source, shader, {
+      const { dependentChunks, outputShader } = await loadShader(source, shader, {
         removeDuplicatedImports,
         warnDuplicatedImports,
         defaultExtension,

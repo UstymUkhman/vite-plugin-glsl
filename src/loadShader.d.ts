@@ -19,7 +19,7 @@ import type { LoadingOptions, LoadingOutput } from './types.d';
  * @returns {LoadingOutput} Loaded, parsed (and compressed)
  * shader output and Map of shaders that import other chunks
  */
-export default function (
+export default async function (
   source: string, shader: string,
   options: LoadingOptions
-): LoadingOutput;
+): Promise<LoadingOutput>;

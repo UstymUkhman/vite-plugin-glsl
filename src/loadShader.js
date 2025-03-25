@@ -321,7 +321,7 @@ function loadChunks (source, path, options) {
  * @returns {LoadingOutput} Loaded, parsed (and compressed)
  * shader output and Map of shaders that import other chunks
  */
-export default function (source, shader, options) {
+export default async function (source, shader, options) {
   const { compress, ...config } = options;
 
   resetSavedChunks();
@@ -334,7 +334,7 @@ export default function (source, shader, options) {
     outputShader: compress
       ? typeof compress !== 'function'
       ? compressShader(output)
-      : compress(output)
+      : await compress(output)
       : output
   };
 }
