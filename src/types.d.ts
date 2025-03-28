@@ -6,32 +6,32 @@ type Callback = (shader: string) => string;
 
 /**
  * @default false
- * @typedef {boolean | Callback | Promise<Callback>} Compress
+ * @typedef {boolean | Callback | Promise<Callback>} Minify
  * 
  * @description Boolean value or custom callback
- * promise / function to optimize output shader length
+ * function/promise to optimize output shader length
  * 
  * @param {string} shader Shader code with included chunks
  * 
- * @returns {string} Compressed shader's source code
+ * @returns {string} Minified shader's source code
  */
-type Compress = boolean | Callback | Promise<Callback>;
+type Minify = boolean | Callback | Promise<Callback>;
 
 /**
  * @typedef {Object} LoadingOptions
  * @description Shader loading config object
  * 
- * @property {boolean}  warnDuplicatedImports   Warn if the same chunk was imported multiple times
- * @property {boolean}  removeDuplicatedImports Automatically remove an already imported chunk
- * @property {string}   defaultExtension        Shader suffix when no extension is specified
- * @property {Compress} compress                Compress output shader code
- * @property {string}   root                    Directory for root imports
+ * @property {boolean} warnDuplicatedImports   Warn if the same chunk was imported multiple times
+ * @property {boolean} removeDuplicatedImports Automatically remove an already imported chunk
+ * @property {string}  defaultExtension        Shader suffix when no extension is specified
+ * @property {Minify}  minify                  Minify output shader code
+ * @property {string}  root                    Directory for root imports
  */
 export type LoadingOptions = {
   warnDuplicatedImports: boolean;
   removeDuplicatedImports: boolean;
   defaultExtension: string;
-  compress: Compress;
+  minify: Minify;
   root: string;
 };
 
@@ -51,7 +51,7 @@ export type LoadingOptions = {
  *   warnDuplicatedImports: true,
  *   removeDuplicatedImports: false,
  *   defaultExtension: DEFAULT_EXTENSION,
- *   compress: false,
+ *   minify: false,
  *   watch: true,
  *   root: '/'
  * }
@@ -66,7 +66,7 @@ export type PluginOptions = Partial<LoadingOptions> & {
  * @since 1.1.2
  * @typedef {Object} LoadingOutput
  * 
- * @returns {LoadingOutput} Loaded, parsed (and compressed)
+ * @returns {LoadingOutput} Loaded, parsed (and minified)
  * shader output and Map of shaders that import other chunks
  * 
  * @property {Map<string, string[]>} dependentChunks Map of shaders that import other chunks

@@ -1,6 +1,6 @@
 # Vite Plugin GLSL #
 
-> Import, inline (and compress) GLSL shader files
+> Import, inline (and minify) GLSL/WGSL shader files
 
 ![npm](https://img.shields.io/npm/dt/vite-plugin-glsl?style=flat-square)
 ![GitHub package.json version](https://img.shields.io/github/package-json/v/UstymUkhman/vite-plugin-glsl?color=brightgreen&style=flat-square)
@@ -65,7 +65,7 @@ glsl({
   warnDuplicatedImports: true,    // Warn if the same chunk was imported multiple times
   removeDuplicatedImports: false, // Automatically remove an already imported chunk
   defaultExtension: 'glsl',       // Shader suffix when no extension is specified
-  compress: false,                // Compress output shader code
+  minify: false,                  // Minify/optimize output shader code
   watch: true,                    // Recompile shader on change
   root: '/'                       // Directory for root imports
 })
@@ -187,6 +187,8 @@ void main (void) {
 ```
 
 ## Change Log ##
+
+- Starting from `v1.4.0` `compress` option was renamed to `minify` and now it allows a promise callback.
 
 - Starting from `v1.3.2` this plugin allows to automatically remove already imported chunks with the `removeDuplicatedImports` option set to `true`.
 

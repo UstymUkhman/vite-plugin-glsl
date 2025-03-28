@@ -193,16 +193,16 @@ function checkIncludedDependencies (path, root) {
 
 /**
  * @function
- * @name compressShader
- * @description Compresses shader source code by
+ * @name minifyShader
+ * @description Minifies shader source code by
  * removing unnecessary whitespace and empty lines
  * 
  * @param {string}  shader  Shader code with included chunks
  * @param {boolean} newLine Flag to require a new line for the code
  * 
- * @returns {string} Compressed shader's source code
+ * @returns {string} Minified shader's source code
  */
-function compressShader (shader, newLine = false) {
+function minifyShader (shader, newLine = false) {
   return shader.replace(/\\(?:\r\n|\n\r|\n|\r)|\/\*.*?\*\/|\/\/(?:\\(?:\r\n|\n\r|\n|\r)|[^\n\r])*/g, '')
     .split(/\n+/).reduce((result, line) => {
       line = line.trim().replace(/\s{2,}|\t/, ' ');
@@ -304,9 +304,11 @@ function loadChunks (source, path, options) {
 /**
  * @function
  * @name loadShader
- * @typedef {import('./types').LoadingOptions} Options
  * @description Iterates through all external chunks, includes them
- * into the shader's source code and optionally compresses the output
+ * into the shader's source code and optionally minifies the output
+ * 
+ * @typedef {import('./types').LoadingOptions} Options
+ * @typedef {import('./types').LoadingOutput} Output
  * 
  * @param {string}  source  Shader's source code
  * @param {string}  shader  Shader's absolute path
@@ -315,26 +317,26 @@ function loadChunks (source, path, options) {
  *  - Warn if the same chunk was imported multiple times
  *  - Automatically remove an already imported chunk
  *  - Shader suffix when no extension is specified
- *  - Compress output shader code
  *  - Directory for root imports
+ *  - Minify output shader code
  * 
- * @returns {LoadingOutput} Loaded, parsed (and compressed)
+ * @returns {Promise<Output>} Loaded, parsed (and minified)
  * shader output and Map of shaders that import other chunks
  */
 export default async function (source, shader, options) {
-  const { compress, ...config } = options;
+  const { minify, ...config } = options;
 
   resetSavedChunks();
 
   let output = loadChunks(source, shader, config);
-  output = compress ? removeSourceComments(output, true) : output;
+  output = minify ? removeSourceComments(output, true) : output;
 
   return {
     dependentChunks,
-    outputShader: compress
-      ? typeof compress !== 'function'
-      ? compressShader(output)
-      : await compress(output)
+    outputShader: minify
+      ? typeof minify !== 'function'
+      ? minifyShader(output)
+      : await minify(output)
       : output
   };
 }

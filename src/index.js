@@ -1,8 +1,8 @@
 /**
  * @module vite-plugin-glsl
  * @author Ustym Ukhman <ustym.ukhman@gmail.com>
- * @description Import, inline (and compress) GLSL shader files
- * @version 1.3.3
+ * @description Import, inline (and minify) GLSL/WGSL shader files
+ * @version 1.4.0
  * @license MIT
  */
 
@@ -34,7 +34,7 @@ const DEFAULT_SHADERS = Object.freeze([
  * @function
  * @name glsl
  * @description Plugin entry point to import,
- * inline, (and compress) GLSL shader files
+ * inline, (and minify) GLSL/WGSL shader files
  * 
  * @see {@link https://vitejs.dev/guide/api-plugin.html}
  * @link https://github.com/UstymUkhman/vite-plugin-glsl
@@ -49,7 +49,7 @@ export default function ({
     warnDuplicatedImports = true,
     removeDuplicatedImports = false,
     defaultExtension = DEFAULT_EXTENSION,
-    compress = false,
+    minify = false,
     watch = true,
     root = '/'
   } = {}
@@ -73,7 +73,7 @@ export default function ({
         removeDuplicatedImports,
         warnDuplicatedImports,
         defaultExtension,
-        compress,
+        minify,
         root
       });
 

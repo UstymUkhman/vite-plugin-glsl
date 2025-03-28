@@ -5,7 +5,7 @@ import type { Plugin } from 'vite';
  * @function
  * @name glsl
  * @description Plugin entry point to import,
- * inline, (and compress) GLSL shader files
+ * inline, (and minify) GLSL/WGSL shader files
  * 
  * @see {@link https://vitejs.dev/guide/api-plugin.html}
  * @link https://github.com/UstymUkhman/vite-plugin-glsl
@@ -19,7 +19,7 @@ export default function ({
   warnDuplicatedImports,
   removeDuplicatedImports,
   defaultExtension,
-  compress,
+  minify,
   watch,
   root
 }?: PluginOptions): Plugin;
