@@ -1,5 +1,6 @@
 import type { PluginOptions } from './types.d';
 import type { Plugin } from 'vite';
+export type { PluginOptions };
 
 /**
  * @function
