@@ -1,6 +1,7 @@
 import { dirname, resolve, extname, posix, sep } from 'path';
 import { emitWarning, cwd } from 'process';
 import { readFileSync } from 'fs';
+import { platform } from 'os';
 
 /**
  * @name recursiveChunk
@@ -148,15 +149,16 @@ function removeSourceComments (source, triple = false) {
  * have caused a recursion error or warning
  * ignoring duplicate chunks if required
  * 
- * @param {string}  path   Shader's absolute path
- * @param {boolean} warn   Check already included chunks
- * @param {boolean} ignore Ignore already included chunks
+ * @param {string}  path    Shader's absolute path
+ * @param {string}  lowPath Shader's lowercase path
+ * @param {boolean} warn    Check already included chunks
+ * @param {boolean} ignore  Ignore already included chunks
  * 
  * @returns {boolean | null} Import recursion has occurred
  * or chunk was ignored because of `ignore` argument
  */
-function checkRecursiveImports (path, warn, ignore) {
-  if (allChunks.has(path)) {
+function checkRecursiveImports (path, lowPath, warn, ignore) {
+  if (allChunks.has(lowPath)) {
     if (ignore) return null;
     warn && checkDuplicatedImports(path);
   }
@@ -243,8 +245,12 @@ function loadChunks (source, path, options) {
   const { warnDuplicatedImports, removeDuplicatedImports } = options;
   const unixPath = path.split(sep).join(posix.sep);
 
+  const chunkPath = platform() === "win32" &&
+    unixPath.toLocaleLowerCase() || unixPath; 
+
   const recursion = checkRecursiveImports(
-    unixPath, warnDuplicatedImports,
+    unixPath, chunkPath,
+    warnDuplicatedImports,
     removeDuplicatedImports
   );
 
@@ -253,7 +259,7 @@ function loadChunks (source, path, options) {
 
   source = removeSourceComments(source);
   let directory = dirname(unixPath);
-  allChunks.add(unixPath);
+  allChunks.add(chunkPath);
 
   if (include.test(source)) {
     dependentChunks.set(unixPath, []);
