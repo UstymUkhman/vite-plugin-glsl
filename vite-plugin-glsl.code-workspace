@@ -1,12 +1,8 @@
 {
 	"settings": {
-    "js-import.filesToScan": "**/*.{d.ts,js,vs,fs,vert,frag,glsl,wgsl}",
     "editor.bracketPairColorization.enabled": false,
 		"javascript.format.semicolons": "insert",
-		"typescript.format.semicolons": "insert",
-		"eslint.validate": ["javascript"],
-		"git.ignoreLimitWarning": true,
-		"js-import.semicolon": true
+		"eslint.validate": ["javascript"]
   },
 
   "folders": [{

@@ -245,7 +245,7 @@ function loadChunks (source, path, options) {
   const { warnDuplicatedImports, removeDuplicatedImports } = options;
   const unixPath = path.split(sep).join(posix.sep);
 
-  const chunkPath = platform() === "win32" &&
+  const chunkPath = platform() === 'win32' &&
     unixPath.toLocaleLowerCase() || unixPath; 
 
   const recursion = checkRecursiveImports(
@@ -300,7 +300,7 @@ function loadChunks (source, path, options) {
     const recursiveChunk = resetSavedChunks();
 
     throw new Error(
-      `Recursion detected when importing '${recursiveChunk}' in '${caller}'.`
+      `Recursion detected when importing "${recursiveChunk}" in "${caller}".`
     );
   }
 
