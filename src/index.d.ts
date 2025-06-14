@@ -17,10 +17,9 @@ export type { PluginOptions };
  */
 export default function ({
   include, exclude,
+  defaultExtension,
   warnDuplicatedImports,
   removeDuplicatedImports,
-  defaultExtension,
-  minify,
-  watch,
-  root
+  importKeyword,
+  minify, watch, root
 }?: PluginOptions): Plugin;

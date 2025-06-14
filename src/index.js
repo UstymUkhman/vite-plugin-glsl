@@ -2,33 +2,13 @@
  * @module vite-plugin-glsl
  * @author Ustym Ukhman <ustym.ukhman@gmail.com>
  * @description Import, inline (and minify) GLSL/WGSL shader files
- * @version 1.4.2
+ * @version 1.5.0
  * @license MIT
  */
 
 import { createFilter } from '@rollup/pluginutils';
 import { transformWithEsbuild } from 'vite';
 import loadShader from './loadShader.js';
-
-/**
- * @const
- * @default
- * @readonly
- * @type {string}
- */
-const DEFAULT_EXTENSION = 'glsl';
-
-/**
- * @const
- * @default
- * @readonly
- * @type {readonly RegExp[]}
- */
-const DEFAULT_SHADERS = Object.freeze([
-  '**/*.glsl', '**/*.wgsl',
-  '**/*.vert', '**/*.frag',
-  '**/*.vs', '**/*.fs'
-]);
 
 /**
  * @function
@@ -44,11 +24,16 @@ const DEFAULT_SHADERS = Object.freeze([
  * @returns {import('vite').Plugin} Vite plugin that converts shader code
  */
 export default function ({
-    include = DEFAULT_SHADERS,
+    include = Object.freeze([
+      '**/*.glsl', '**/*.wgsl',
+      '**/*.vert', '**/*.frag',
+      '**/*.vs', '**/*.fs'
+    ]),
     exclude = undefined,
+    defaultExtension = 'glsl',
     warnDuplicatedImports = true,
     removeDuplicatedImports = false,
-    defaultExtension = DEFAULT_EXTENSION,
+    importKeyword = '#include',
     minify = false,
     watch = true,
     root = '/'
@@ -73,8 +58,8 @@ export default function ({
         removeDuplicatedImports,
         warnDuplicatedImports,
         defaultExtension,
-        minify,
-        root
+        importKeyword,
+        minify, root
       });
 
       watch && !prod && Array.from(dependentChunks.values())

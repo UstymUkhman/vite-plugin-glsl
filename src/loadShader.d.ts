@@ -10,9 +10,10 @@ import type { LoadingOptions, LoadingOutput } from './types.d';
  * @param {string}         shader  Shader's absolute path
  * @param {LoadingOptions} options Configuration object to define:
  * 
+ *  - Shader suffix to use when no extension is specified
  *  - Warn if the same chunk was imported multiple times
  *  - Automatically remove an already imported chunk
- *  - Shader suffix when no extension is specified
+ *  - Keyword used to import shader chunks
  *  - Directory for root imports
  *  - Minify output shader code
  * 

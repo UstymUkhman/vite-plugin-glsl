@@ -62,9 +62,10 @@ glsl({
     '**/*.vs', '**/*.fs'
   ],
   exclude: undefined,             // Glob pattern, or array of glob patterns to ignore
+  defaultExtension: 'glsl',       // Shader suffix to use when no extension is specified
   warnDuplicatedImports: true,    // Warn if the same chunk was imported multiple times
   removeDuplicatedImports: false, // Automatically remove an already imported chunk
-  defaultExtension: 'glsl',       // Shader suffix when no extension is specified
+  importKeyword: '#include',      // Keyword used to import shader chunks
   minify: false,                  // Minify/optimize output shader code
   watch: true,                    // Recompile shader on change
   root: '/'                       // Directory for root imports
@@ -187,6 +188,8 @@ void main (void) {
 ```
 
 ## Change Log ##
+
+- Starting from `v1.5.0` this plugin supports a custom `importKeyword` to include shader chunks.
 
 - Starting from `v1.4.0` `compress` option was renamed to `minify` and now it allows a promise callback.
 

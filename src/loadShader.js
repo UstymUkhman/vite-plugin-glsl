@@ -45,16 +45,6 @@ const dependentChunks = new Map();
 const duplicatedChunks = new Map();
 
 /**
- * @const
- * @name include
- * @type {readonly RegExp}
- * 
- * @description RegEx to match GLSL
- * `#include` preprocessor instruction
- */
-const include = /#include(\s+([^\s<>]+));?/gi;
-
-/**
  * @function
  * @name resetSavedChunks
  * @description Clears all lists of saved chunks
@@ -117,12 +107,15 @@ function checkDuplicatedImports (path) {
  * @description Removes comments from shader source
  * code in order to avoid including commented chunks
  * 
- * @param {string}  source Shader's source code
- * @param {boolean} triple Remove comments starting with `///`
+ * @param {string}  source  Shader's source code
+ * @param {string}  keyword Keyword to import chunks
+ * @param {boolean} triple  Remove comments starting with `///`
  * 
  * @returns {string} Shader's source code without comments
  */
-function removeSourceComments (source, triple = false) {
+function removeSourceComments (source, keyword, triple = false) {
+  const pattern = new RegExp(String.raw`${keyword}(\s+([^\s<>]+));?`, 'gi');
+
   if (source.includes('/*') && source.includes('*/')) {
     source = source.slice(0, source.indexOf('/*')) +
     source.slice(source.indexOf('*/') + 2, source.length);
@@ -134,7 +127,7 @@ function removeSourceComments (source, triple = false) {
     const index = lines[l].indexOf('//');
 
     if (index > -1) {
-      if (lines[l][index + 2] === '/' && !include.test(lines[l]) && !triple) continue;
+      if (lines[l][index + 2] === '/' && !pattern.test(lines[l]) && !triple) continue;
       lines[l] = lines[l].slice(0, lines[l].indexOf('//'));
     }
   }
@@ -242,7 +235,8 @@ function minifyShader (shader, newLine = false) {
  * @returns {string} Shader's source code without external chunks
  */
 function loadChunks (source, path, options) {
-  const { warnDuplicatedImports, removeDuplicatedImports } = options;
+  const { importKeyword, warnDuplicatedImports, removeDuplicatedImports } = options;
+  const pattern = new RegExp(String.raw`${importKeyword}(\s+([^\s<>]+));?`, 'gi');
   const unixPath = path.split(sep).join(posix.sep);
 
   const chunkPath = platform() === 'win32' &&
@@ -261,12 +255,12 @@ function loadChunks (source, path, options) {
   let directory = dirname(unixPath);
   allChunks.add(chunkPath);
 
-  if (include.test(source)) {
+  if (pattern.test(source)) {
     dependentChunks.set(unixPath, []);
     const currentDirectory = directory;
     const ext = options.defaultExtension;
 
-    source = source.replace(include, (_, chunkPath) => {
+    source = source.replace(pattern, (_, chunkPath) => {
       chunkPath = chunkPath.trim().replace(/^(?:"|')?|(?:"|')?;?$/gi, '');
 
       if (!chunkPath.indexOf('/')) {
@@ -320,9 +314,10 @@ function loadChunks (source, path, options) {
  * @param {string}  shader  Shader's absolute path
  * @param {Options} options Configuration object to define:
  * 
+ *  - Shader suffix to use when no extension is specified
  *  - Warn if the same chunk was imported multiple times
  *  - Automatically remove an already imported chunk
- *  - Shader suffix when no extension is specified
+ *  - Keyword used to import shader chunks
  *  - Directory for root imports
  *  - Minify output shader code
  * 
@@ -335,7 +330,7 @@ export default async function (source, shader, options) {
   resetSavedChunks();
 
   let output = loadChunks(source, shader, config);
-  output = minify ? removeSourceComments(output, true) : output;
+  output = minify ? removeSourceComments(output, options.importKeyword, true) : output;
 
   return {
     dependentChunks,
