@@ -189,6 +189,8 @@ void main (void) {
 
 ## Change Log ##
 
+- Starting from `v1.5.1` this plugin is fully compatible with `vite^7.0.0`.
+
 - Starting from `v1.5.0` this plugin supports a custom `importKeyword` to include shader chunks.
 
 - Starting from `v1.4.0` `compress` option was renamed to `minify` and now it allows a promise callback.
