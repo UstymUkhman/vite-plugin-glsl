@@ -7,7 +7,7 @@
  */
 
 import { createFilter } from '@rollup/pluginutils';
-import { transformWithEsbuild } from 'vite';
+import * as vite from 'vite';
 import loadShader from './loadShader.js';
 
 /**
@@ -15,12 +15,12 @@ import loadShader from './loadShader.js';
  * @name glsl
  * @description Plugin entry point to import,
  * inline, (and minify) GLSL/WGSL shader files
- * 
+ *
  * @see {@link https://vitejs.dev/guide/api-plugin.html}
  * @link https://github.com/UstymUkhman/vite-plugin-glsl
- * 
+ *
  * @param {import('./types').PluginOptions} options Plugin config object
- * 
+ *
  * @returns {import('vite').Plugin} Vite plugin that converts shader code
  */
 export default function ({
@@ -65,11 +65,26 @@ export default function ({
       watch && !prod && Array.from(dependentChunks.values())
         .flat().forEach(chunk => this.addWatchFile(chunk));
 
-      return await transformWithEsbuild(outputShader, shader, {
-        sourcemap: sourcemap && 'external',
-        loader: 'text', format: 'esm',
-        minifyWhitespace: prod
-      });
+      if (typeof vite.transformWithOxc === 'function'){
+        return await vite.transformWithOxc(outputShader, shader, {
+          sourceMap: Boolean(sourcemap)
+        });
+      }
+
+      if (typeof vite.transformWithEsbuild === 'function'){
+        try {
+              await import('esbuild');
+              return await vite.transformWithEsbuild(outputShader, shader, {
+                sourcemap: sourcemap && 'external',
+                loader: 'text', format: 'esm',
+                minifyWhitespace: prod
+              })
+        } catch {
+          this.warn(
+              '[vite-plugin-glsl] `esbuild` not found'
+          )
+        }
+      }
     }
   };
 }
