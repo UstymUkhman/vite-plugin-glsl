@@ -64,7 +64,11 @@
     "test": "vite"
   },
   "peerDependencies": {
-    "vite": ">= 3.x"
+    "vite": ">= 3.x",
+    "esbuild": "^0.21 || ^0.23"
+  },
+  "peerDependenciesMeta": {
+    "esbuild": { "optional": true }
   },
   "dependencies": {
     "@rollup/pluginutils": "^5.1.4"
