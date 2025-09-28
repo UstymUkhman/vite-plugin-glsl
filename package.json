@@ -72,6 +72,9 @@
     "esbuild": { "optional": true },
     "@rollup/pluginutils": { "optional": true }
   },
+  "overrides": {
+    "vite": "npm:rolldown-vite@latest"
+  },
   "devDependencies": {
     "vite": "^7.1.7"
   },

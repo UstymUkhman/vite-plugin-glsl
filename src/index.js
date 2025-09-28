@@ -58,7 +58,7 @@ export default async function ({
     if (+Vite.version.replaceAll('.', '') < 630) {
       try {
         filter = (await import('@rollup/pluginutils'))
-        .createFilter(include, exclude);
+          .createFilter(include, exclude);
       }
 
       catch {
@@ -75,7 +75,7 @@ export default async function ({
     name: 'vite-plugin-glsl',
 
     configResolved (resolvedConfig) {
-      sourcemap = resolvedConfig.build.sourcemap;
+      sourcemap = !!resolvedConfig.build.sourcemap;
     },
 
     transform: { filter: {
@@ -97,13 +97,14 @@ export default async function ({
         watch && !prod && Array.from(dependentChunks.values())
           .flat().forEach(chunk => this.addWatchFile(chunk));
 
-        return await (oxc ? Vite.transformWithOxc(outputShader, shader /*, {
-            sourceMap: !!sourcemap
-          } */) : Vite.transformWithEsbuild(outputShader, shader, {
-          sourcemap: sourcemap && 'external',
-          loader: 'text', format: 'esm',
-          minifyWhitespace: prod
-        }));
+        return await (oxc
+          ? Vite.transformWithOxc(`export default \`${outputShader}\``, shader, { sourcemap })
+          : Vite.transformWithEsbuild(outputShader, shader, {
+            sourcemap: sourcemap && 'external',
+            loader: 'text', format: 'esm',
+            minifyWhitespace: prod
+          })
+        );
       }
     }
   };
