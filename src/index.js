@@ -2,15 +2,16 @@
  * @module vite-plugin-glsl
  * @author Ustym Ukhman <ustym.ukhman@gmail.com>
  * @description Import, inline (and minify) GLSL/WGSL shader files
- * @version 1.5.1
+ * @version 1.5.2
  * @license MIT
  */
 
-import { createFilter } from '@rollup/pluginutils';
-import * as vite from 'vite';
 import loadShader from './loadShader.js';
+import { emitWarning } from 'process';
+import * as Vite from 'vite';
 
 /**
+ * @async
  * @function
  * @name glsl
  * @description Plugin entry point to import,
@@ -23,7 +24,7 @@ import loadShader from './loadShader.js';
  *
  * @returns {import('vite').Plugin} Vite plugin that converts shader code
  */
-export default function ({
+export default async function ({
     include = Object.freeze([
       '**/*.glsl', '**/*.wgsl',
       '**/*.vert', '**/*.frag',
@@ -39,9 +40,35 @@ export default function ({
     root = '/'
   } = {}
 ) {
-  let sourcemap = false;
-  const filter = createFilter(include, exclude);
+  let filter, sourcemap = false;
   const prod = process.env.NODE_ENV === 'production';
+  const oxc = typeof Vite.transformWithOxc === 'function';
+  const esbuild = typeof Vite.transformWithEsbuild === 'function';
+
+  if (esbuild && !oxc) {
+    try { await import('esbuild'); }
+
+    catch {
+      emitWarning(`'esbuild' was not found.`, {
+        code: 'vite-plugin-glsl',
+        detail: 'Please install it as a dev dependency if your vite version does not use rolldown.'
+      });
+    }
+
+    if (+Vite.version.replaceAll('.', '') < 630) {
+      try {
+        filter = (await import('@rollup/pluginutils'))
+        .createFilter(include, exclude);
+      }
+
+      catch {
+        emitWarning(`'@rollup/pluginutils' was not found.`, {
+          code: 'vite-plugin-glsl',
+          detail: 'Please install it as a dev dependency if your vite version is < 6.3.'
+        });
+      }
+    }
+  }
 
   return {
     enforce: 'pre',
@@ -51,39 +78,32 @@ export default function ({
       sourcemap = resolvedConfig.build.sourcemap;
     },
 
-    async transform (source, shader) {
-      if (!filter(shader)) return;
+    transform: { filter: {
+        id: { include, exclude },
+        code: { include: importKeyword }
+      },
 
-      const { dependentChunks, outputShader } = await loadShader(source, shader, {
-        removeDuplicatedImports,
-        warnDuplicatedImports,
-        defaultExtension,
-        importKeyword,
-        minify, root
-      });
+      async handler (source, shader) {
+        if (filter && !filter(shader)) return;
 
-      watch && !prod && Array.from(dependentChunks.values())
-        .flat().forEach(chunk => this.addWatchFile(chunk));
-
-      if (typeof vite.transformWithOxc === 'function'){
-        return await vite.transformWithOxc(outputShader, shader, {
-          sourceMap: Boolean(sourcemap)
+        const { dependentChunks, outputShader } = await loadShader(source, shader, {
+          removeDuplicatedImports,
+          warnDuplicatedImports,
+          defaultExtension,
+          importKeyword,
+          minify, root
         });
-      }
 
-      if (typeof vite.transformWithEsbuild === 'function'){
-        try {
-              await import('esbuild');
-              return await vite.transformWithEsbuild(outputShader, shader, {
-                sourcemap: sourcemap && 'external',
-                loader: 'text', format: 'esm',
-                minifyWhitespace: prod
-              })
-        } catch {
-          this.warn(
-              '[vite-plugin-glsl] `esbuild` not found'
-          )
-        }
+        watch && !prod && Array.from(dependentChunks.values())
+          .flat().forEach(chunk => this.addWatchFile(chunk));
+
+        return await (oxc ? Vite.transformWithOxc(outputShader, shader /*, {
+            sourceMap: !!sourcemap
+          } */) : Vite.transformWithEsbuild(outputShader, shader, {
+          sourcemap: sourcemap && 'external',
+          loader: 'text', format: 'esm',
+          minifyWhitespace: prod
+        }));
       }
     }
   };

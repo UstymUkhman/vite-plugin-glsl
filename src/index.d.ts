@@ -3,6 +3,7 @@ import type { Plugin } from 'vite';
 export type { PluginOptions };
 
 /**
+ * @async
  * @function
  * @name glsl
  * @description Plugin entry point to import,
@@ -15,7 +16,7 @@ export type { PluginOptions };
  * 
  * @returns {Plugin} Vite plugin that converts shader code
  */
-export default function ({
+export default async function ({
   include, exclude,
   defaultExtension,
   warnDuplicatedImports,
