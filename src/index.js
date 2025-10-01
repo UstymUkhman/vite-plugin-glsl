@@ -2,7 +2,7 @@
  * @module vite-plugin-glsl
  * @author Ustym Ukhman <ustym.ukhman@gmail.com>
  * @description Import, inline (and minify) GLSL/WGSL shader files
- * @version 1.5.2
+ * @version 1.5.3
  * @license MIT
  */
 
@@ -78,10 +78,8 @@ export default async function ({
       sourcemap = !!resolvedConfig.build.sourcemap;
     },
 
-    transform: { filter: {
-        id: { include, exclude },
-        code: { include: importKeyword }
-      },
+    transform: {
+      filter: { id: { include, exclude } },
 
       async handler (source, shader) {
         if (filter && !filter(shader)) return;
