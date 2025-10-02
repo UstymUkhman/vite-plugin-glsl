@@ -55,7 +55,7 @@ export default async function ({
       });
     }
 
-    if (+Vite.version.replaceAll('.', '') < 630) {
+    if (+Vite.version.replaceAll('.', '') < 6300) {
       try {
         filter = (await import('@rollup/pluginutils'))
           .createFilter(include, exclude);
