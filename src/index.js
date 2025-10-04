@@ -2,7 +2,7 @@
  * @module vite-plugin-glsl
  * @author Ustym Ukhman <ustym.ukhman@gmail.com>
  * @description Import, inline (and minify) GLSL/WGSL shader files
- * @version 1.5.3
+ * @version 1.5.4
  * @license MIT
  */
 
@@ -55,7 +55,9 @@ export default async function ({
       });
     }
 
-    if (+Vite.version.replaceAll('.', '') < 630) {
+    const [major, minor] = Vite.version.split('.').map(v => +v);
+
+    if (major < 6 || major === 6 && minor < 3) {
       try {
         filter = (await import('@rollup/pluginutils'))
           .createFilter(include, exclude);
