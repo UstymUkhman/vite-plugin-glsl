@@ -198,6 +198,15 @@ function checkIncludedDependencies (path, root) {
  * @returns {string} Minified shader's source code
  */
 function minifyShader (shader, newLine = false) {
+  const getAllCharIndexes = (line, char = '-', start = 0) => {
+    const indexes = [];
+
+    while ((start = line.indexOf(char, start)) !== -1)
+      indexes.push(start++);
+
+    return indexes;
+  };
+
   return shader.replace(/\\(?:\r\n|\n\r|\n|\r)|\/\*.*?\*\/|\/\/(?:\\(?:\r\n|\n\r|\n|\r)|[^\n\r])*/g, '')
     .split(/\n+/).reduce((result, line) => {
       line = line.trim().replace(/\s{2,}|\t/, ' ');
@@ -212,7 +221,15 @@ function minifyShader (shader, newLine = false) {
 
       else {
         !line.startsWith('{') && result.length && result[result.length - 1].endsWith('else') && result.push(' ');
-        result.push(line.replace(/\s*({|}|=|\*|,|\+|\/|>|<|&|\||\[|\]|\(|\)|\-|!|;)\s*/g, '$1'));
+        line = line.replace(/\s*({|}|=|\*|,|\+|\/|>|<|&|\||\[|\]|\(|\)|!|;)\s*/g, '$1');
+        const indexes = getAllCharIndexes(line);
+
+        indexes.forEach(index => {
+          if (line[index - 1] === ' ' && line[index - 2] !== '-') line = `${line.slice(0, index - 1)}${line.slice(index--)}`;
+          if (line[index + 1] === ' ' && line[index + 2] !== '-') line = `${line.slice(0, index + 1)}${line.slice(index + 2)}`;
+        });
+
+        result.push(line);
         newLine = true;
       }
 

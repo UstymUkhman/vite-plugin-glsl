@@ -6,7 +6,7 @@
   "types": "./src/index.d.ts",
   "module": "./src/index.js",
   "main": "./src/index.js",
-  "version": "1.5.4",
+  "version": "1.5.5",
   "private": false,
   "license": "MIT",
   "type": "module",
@@ -76,7 +76,7 @@
     "vite": "npm:rolldown-vite@latest"
   },
   "devDependencies": {
-    "vite": "^7.1.7"
+    "vite": "latest"
   },
   "engines": {
     "node": ">= 20.17.0",

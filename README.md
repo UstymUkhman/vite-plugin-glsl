@@ -189,7 +189,7 @@ void main (void) {
 
 ## Change Log ##
 
-- Starting from `v1.5.2` this plugin uses `vite.transformWithOxc` functiion when available.
+- Starting from `v1.5.2` this plugin uses `vite.transformWithOxc` function when available.
 
 - Starting from `v1.5.1` this plugin is fully compatible with `vite^7.0.0`.
 
