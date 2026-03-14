@@ -6,7 +6,7 @@
   "types": "./src/index.d.ts",
   "module": "./src/index.js",
   "main": "./src/index.js",
-  "version": "1.5.5",
+  "version": "1.5.6",
   "private": false,
   "license": "MIT",
   "type": "module",
@@ -69,11 +69,12 @@
     "@rollup/pluginutils": "^5.x"
   },
   "peerDependenciesMeta": {
-    "esbuild": { "optional": true },
-    "@rollup/pluginutils": { "optional": true }
-  },
-  "overrides": {
-    "vite": "npm:rolldown-vite@latest"
+    "esbuild": {
+      "optional": true
+    },
+    "@rollup/pluginutils": {
+      "optional": true
+    }
   },
   "devDependencies": {
     "vite": "latest"

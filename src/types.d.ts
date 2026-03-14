@@ -1,24 +1,26 @@
 /** @typedef {string | string[]} GlobPattern */
 export type GlobPattern = string | string[];
 
-/** @typedef {string | Promise<string>} CallbackResult */
-type CallbackResult = string | Promise<string>;
+/** @typedef {Promise<string> | string} MinifyResult */
+type MinifyResult = Promise<string> | string;
 
-/** @typedef {(shader: string) => CallbackResult} Callback */
-type Callback = (shader: string) => CallbackResult;
+/**
+ * @typedef {(shader: string) => MinifyResult} MinifyCallback
+ *
+ * @param {string} shader Shader code with included chunks
+ *
+ * @returns {MinifyResult} Minified shader's source code
+ */
+type MinifyCallback = (shader: string) => MinifyResult;
 
 /**
  * @default false
- * @typedef {boolean | Callback} Minify
- * 
- * @description Boolean value or custom callback
- * function to optimize output shader length
- * 
- * @param {string} shader Shader code with included chunks
- * 
- * @returns {CallbackResult} Minified shader's source code
+ * @typedef {MinifyCallback | boolean} Minify
+ *
+ * @description A boolean value or a custom
+ * callback function to optimize output shader length
  */
-type Minify = boolean | Callback;
+type Minify = MinifyCallback | boolean;
 
 /**
  * @typedef {Object} LoadingOptions
