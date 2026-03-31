@@ -1,3 +1,6 @@
+# Files:
+*-wasm.*
+
 # Folders:
 node_modules/
 test/glsl/lygia
