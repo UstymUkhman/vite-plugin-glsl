@@ -13,7 +13,7 @@ import type { LoadingOptions, LoadingOutput } from './types.d';
  *  - Shader suffix to use when no extension is specified
  *  - Warn if the same chunk was imported multiple times
  *  - Automatically remove an already imported chunk
- *  - Keyword used to import shader chunks
+ *  - Keywords used to import shader chunks
  *  - Directory for root imports
  *  - Minify output shader code
  * 

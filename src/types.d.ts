@@ -26,18 +26,18 @@ type Minify = MinifyCallback | boolean;
  * @typedef {Object} LoadingOptions
  * @description Shader loading config object
  * 
- * @property {string}  defaultExtension        Shader suffix to use when no extension is specified
- * @property {boolean} warnDuplicatedImports   Warn if the same chunk was imported multiple times
- * @property {boolean} removeDuplicatedImports Automatically remove an already imported chunk
- * @property {string}  importKeyword           Keyword used to import shader chunks
- * @property {Minify}  minify                  Minify output shader code
- * @property {string}  root                    Directory for root imports
+ * @property {string}   defaultExtension        Shader suffix to use when no extension is specified
+ * @property {boolean}  warnDuplicatedImports   Warn if the same chunk was imported multiple times
+ * @property {boolean}  removeDuplicatedImports Automatically remove an already imported chunk
+ * @property {string[]} importKeywords          Keywords used to import shader chunks
+ * @property {Minify}   minify                  Minify output shader code
+ * @property {string}   root                    Directory for root imports
  */
 export type LoadingOptions = {
   warnDuplicatedImports: boolean;
   removeDuplicatedImports: boolean;
   defaultExtension: string;
-  importKeyword: string;
+  importKeywords: string[];
   minify: Minify;
   root: string;
 };
@@ -62,7 +62,7 @@ export type LoadingOptions = {
  *   defaultExtension: 'glsl',
  *   warnDuplicatedImports: true,
  *   removeDuplicatedImports: false,
- *   importKeyword: '#include',
+ *   importKeywords: ['#include'],
  *   minify: false,
  *   watch: true,
  *   root: '/'

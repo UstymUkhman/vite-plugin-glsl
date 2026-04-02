@@ -6,6 +6,7 @@
  * @license MIT
  */
 
+export { minifyShader as minify } from './loadShader.js';
 import loadShader from './loadShader.js';
 import { emitWarning } from 'process';
 import * as Vite from 'vite';
@@ -34,7 +35,7 @@ export default async function ({
     defaultExtension = 'glsl',
     warnDuplicatedImports = true,
     removeDuplicatedImports = false,
-    importKeyword = '#include',
+    importKeywords = ['#include'],
     minify = false,
     watch = true,
     root = '/'
@@ -90,7 +91,7 @@ export default async function ({
           removeDuplicatedImports,
           warnDuplicatedImports,
           defaultExtension,
-          importKeyword,
+          importKeywords,
           minify, root
         });
 

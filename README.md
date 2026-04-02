@@ -65,7 +65,7 @@ glsl({
   defaultExtension: 'glsl',       // Shader suffix to use when no extension is specified
   warnDuplicatedImports: true,    // Warn if the same chunk was imported multiple times
   removeDuplicatedImports: false, // Automatically remove an already imported chunk
-  importKeyword: '#include',      // Keyword used to import shader chunks
+  importKeywords: ['#include'],   // Keywords used to import shader chunks
   minify: false,                  // Minify/optimize output shader code
   watch: true,                    // Recompile shader on change
   root: '/'                       // Directory for root imports

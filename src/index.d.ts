@@ -21,6 +21,18 @@ export default async function ({
   defaultExtension,
   warnDuplicatedImports,
   removeDuplicatedImports,
-  importKeyword,
+  importKeywords,
   minify, watch, root
 }?: PluginOptions): Plugin;
+
+/**
+ * @function
+ * @name minify
+ * @description Internal function used to minify
+ * shaders when `minify` option is set to `true`
+ * 
+ * @param {string} shader Shader source code
+ * 
+ * @returns {Plugin} Vite plugin that converts shader code
+ */
+export type minify = (shader: string) => string;
