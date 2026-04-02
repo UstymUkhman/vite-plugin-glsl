@@ -1,7 +1,8 @@
+import Slang from './slang-wasm.js';
+import { minify } from './src/index.js';
+
 const error = ({  type, message  }) =>
   console.error(`${type} error:`, message);
-
-import Slang from './slang-wasm.js';
 
 const slang = await Slang();
 const globalSession = slang.createGlobalSession();
@@ -12,10 +13,10 @@ const target = slang.getCompileTargets().find(
   ({ name }) => name === 'WGSL'
 )?.value;
 
-export default {
+export default (mode) => ({
   include: ['**/*.slang'],
-  importKeyword: 'import',
   defaultExtension: 'slang',
+  importKeywords: ['import', '__include'],
 
   minify: async (shader, session) => {
     session = globalSession.createSession(target);
@@ -43,6 +44,6 @@ export default {
 
     !shader.length && error(slang.getLastError());
 
-    return shader;
+    return mode === "production" ? minify(shader) : shader;
   }
-};
+});

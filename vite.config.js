@@ -2,9 +2,9 @@
 import { defineConfig } from 'vite';
 import glsl from './src/index.js';
 
-export default defineConfig({
+export default ({ mode }) => defineConfig({
+  plugins: [glsl(/* slang(mode) */)],
   build: { sourcemap: true },
-  plugins: [glsl(/* slang */)],
 
   server: {
     open: false,
