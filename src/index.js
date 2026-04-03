@@ -36,6 +36,7 @@ export default async function ({
     warnDuplicatedImports = true,
     removeDuplicatedImports = false,
     importKeywords = ['#include'],
+    onComplete = undefined,
     minify = false,
     watch = true,
     root = '/'
@@ -92,7 +93,9 @@ export default async function ({
           warnDuplicatedImports,
           defaultExtension,
           importKeywords,
-          minify, root
+          onComplete,
+          minify,
+          root
         });
 
         watch && !prod && Array.from(dependentChunks.values())

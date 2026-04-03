@@ -17,12 +17,16 @@ export type { PluginOptions };
  * @returns {Plugin} Vite plugin that converts shader code
  */
 export default async function ({
-  include, exclude,
+  include,
+  exclude,
   defaultExtension,
   warnDuplicatedImports,
   removeDuplicatedImports,
   importKeywords,
-  minify, watch, root
+  onComplete,
+  minify,
+  watch,
+  root
 }?: PluginOptions): Plugin;
 
 /**
@@ -33,6 +37,6 @@ export default async function ({
  * 
  * @param {string} shader Shader source code
  * 
- * @returns {Plugin} Vite plugin that converts shader code
+ * @returns {string} Minified shader code
  */
 export type minify = (shader: string) => string;

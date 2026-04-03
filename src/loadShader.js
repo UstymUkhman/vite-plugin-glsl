@@ -331,6 +331,7 @@ function loadChunks (source, path, pattern, options) {
  *  - Shader suffix to use when no extension is specified
  *  - Warn if the same chunk was imported multiple times
  *  - Automatically remove an already imported chunk
+ *  - Optional function to call with output shader
  *  - Keywords used to import shader chunks
  *  - Directory for root imports
  *  - Minify output shader code
@@ -345,15 +346,13 @@ export default async function (source, shader, options) {
 
   resetSavedChunks();
 
-  let output = loadChunks(source, shader, pattern, options);
-  output = options.minify ? removeSourceComments(output, pattern, true) : output;
+  let outputShader = loadChunks(source, shader, pattern, options);
 
-  return {
-    dependentChunks,
-    outputShader: options.minify
-      ? typeof options.minify === 'function'
-        ? await options.minify(output)
-        : minifyShader(output)
-      : output
-  };
+  options.minify && (outputShader = minifyShader(
+    removeSourceComments(outputShader, pattern, true))
+  );
+
+  outputShader = await options.onComplete?.(outputShader, shader) ?? outputShader;
+
+  return { dependentChunks, outputShader };
 }

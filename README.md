@@ -66,6 +66,7 @@ glsl({
   warnDuplicatedImports: true,    // Warn if the same chunk was imported multiple times
   removeDuplicatedImports: false, // Automatically remove an already imported chunk
   importKeywords: ['#include'],   // Keywords used to import shader chunks
+  onComplete: undefined,          // Function to call with output shader
   minify: false,                  // Minify/optimize output shader code
   watch: true,                    // Recompile shader on change
   root: '/'                       // Directory for root imports
@@ -188,6 +189,8 @@ void main (void) {
 ```
 
 ## Change Log ##
+
+- Starting from `v1.6.0` this plugin supports `onComplete` callback function to customize output shaders.
 
 - Starting from `v1.5.2` this plugin uses `vite.transformWithOxc` function when available.
 

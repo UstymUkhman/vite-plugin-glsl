@@ -18,11 +18,11 @@ export default (mode) => ({
   defaultExtension: 'slang',
   importKeywords: ['import', '__include'],
 
-  minify: async (shader, session) => {
+  onComplete: async (shader, path, session) => {
     session = globalSession.createSession(target);
 
     const module = session.loadModuleFromSource(
-      shader, 'main', './test/slang/main.slang'
+      shader, path.slice(path.lastIndexOf('/') + 1, path.lastIndexOf('.')), path
     );
 
     !module && error(slang.getLastError());

@@ -46,7 +46,7 @@ const importShaders = () =>
       app.textContent += '----- Slang: -----\n\n';
       app.textContent += Slang;
 
-      import.meta.hot?.accept('/test/slang/main.slang', ({ default: slang }) => {
+      import.meta.hot?.accept('/test/slang/shader.slang', ({ default: slang }) => {
         console.clear();
         console.info('Slang Shader Hot Module Replacement.');
         console.info(`Slang Shader Length: ${slang.length} characters.`);

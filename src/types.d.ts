@@ -1,44 +1,38 @@
-/** @typedef {string | string[]} GlobPattern */
-export type GlobPattern = string | string[];
-
 /** @typedef {Promise<string> | string} MinifyResult */
-type MinifyResult = Promise<string> | string;
+type OnCompleteOutput = Promise<string> | string;
 
 /**
- * @typedef {(shader: string) => MinifyResult} MinifyCallback
+ * @typedef {((shader: string, path: string) => OnCompleteOutput) | undefined} OnComplete
  *
  * @param {string} shader Shader code with included chunks
+ * @param {string} path   Shader's absolute path
  *
- * @returns {MinifyResult} Minified shader's source code
+ * @returns {string} Must return the complete shader
  */
-type MinifyCallback = (shader: string) => MinifyResult;
+type OnComplete = ((shader: string, path: string) => OnCompleteOutput) | undefined;
 
-/**
- * @default false
- * @typedef {MinifyCallback | boolean} Minify
- *
- * @description A boolean value or a custom
- * callback function to optimize output shader length
- */
-type Minify = MinifyCallback | boolean;
+/** @typedef {string | string[]} GlobPattern */
+type GlobPattern = string | string[];
 
 /**
  * @typedef {Object} LoadingOptions
  * @description Shader loading config object
  * 
- * @property {string}   defaultExtension        Shader suffix to use when no extension is specified
- * @property {boolean}  warnDuplicatedImports   Warn if the same chunk was imported multiple times
- * @property {boolean}  removeDuplicatedImports Automatically remove an already imported chunk
- * @property {string[]} importKeywords          Keywords used to import shader chunks
- * @property {Minify}   minify                  Minify output shader code
- * @property {string}   root                    Directory for root imports
+ * @property {string}     defaultExtension        Shader suffix to use when no extension is specified
+ * @property {boolean}    warnDuplicatedImports   Warn if the same chunk was imported multiple times
+ * @property {boolean}    removeDuplicatedImports Automatically remove an already imported chunk
+ * @property {string[]}   importKeywords          Keywords used to import shader chunks
+ * @property {OnComplete} onComplete              Function to call with output shader
+ * @property {boolean}    minify                  Minify/optimize output shader code
+ * @property {string}     root                    Directory for root imports
  */
 export type LoadingOptions = {
   warnDuplicatedImports: boolean;
   removeDuplicatedImports: boolean;
   defaultExtension: string;
   importKeywords: string[];
-  minify: Minify;
+  onComplete: OnComplete;
+  minify: boolean;
   root: string;
 };
 
@@ -63,6 +57,7 @@ export type LoadingOptions = {
  *   warnDuplicatedImports: true,
  *   removeDuplicatedImports: false,
  *   importKeywords: ['#include'],
+ *   onComplete: undefined,
  *   minify: false,
  *   watch: true,
  *   root: '/'
