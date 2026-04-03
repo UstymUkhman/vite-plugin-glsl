@@ -52,6 +52,10 @@ or as a [package dependency directive](https://www.typescriptlang.org/docs/handb
 /// <reference types="vite-plugin-glsl/ext" />
 ```
 
+### With Slang Shaders ###
+
+Slang shaders are not supported out of the box; however, starting from version `1.6.0`, it's quite easy to use them with this plugin. You'll need some minimal setup you can find [here](https://github.com/UstymUkhman/vite-plugin-glsl/blob/main/vite.slang.js) to copy-paste in your `vite.config` file. The idea is to use multiple `importKeywords` to include Slang shader chunks and convert the output shader to a web-friendly format (like `WGSL`) by using the `onComplete` option and the Slang compiler.
+
 ## Default Options ##
 
 ```js

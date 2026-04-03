@@ -1,7 +1,7 @@
 import Slang from './slang-wasm.js';
 import { minify } from './src/index.js';
 
-const error = ({  type, message  }) =>
+const error = ({ type, message }) =>
   console.error(`${type} error:`, message);
 
 const slang = await Slang();
@@ -18,7 +18,7 @@ export default (mode) => ({
   defaultExtension: 'slang',
   importKeywords: ['import', '__include'],
 
-  onComplete: async (shader, path, session) => {
+  onComplete: (shader, path, session) => {
     session = globalSession.createSession(target);
 
     const module = session.loadModuleFromSource(
@@ -44,6 +44,7 @@ export default (mode) => ({
 
     !shader.length && error(slang.getLastError());
 
+    // Minify output shader only when building for production:
     return mode === "production" ? minify(shader) : shader;
   }
 });
