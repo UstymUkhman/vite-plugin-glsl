@@ -7,7 +7,7 @@ export type { PluginOptions };
  * @function
  * @name glsl
  * @description Plugin entry point to import,
- * inline, (and minify) GLSL/WGSL shader files
+ * inline, (and minify) GLSL/WGSL/Slang shader files
  * 
  * @see {@link https://vitejs.dev/guide/api-plugin.html}
  * @link https://github.com/UstymUkhman/vite-plugin-glsl

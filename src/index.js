@@ -1,7 +1,7 @@
 /**
  * @module vite-plugin-glsl
  * @author Ustym Ukhman <ustym.ukhman@gmail.com>
- * @description Import, inline (and minify) GLSL/WGSL shader files
+ * @description Import, inline (and minify) GLSL/WGSL/Slang shader files
  * @version 1.6.0
  * @license MIT
  */
@@ -16,7 +16,7 @@ import * as Vite from 'vite';
  * @function
  * @name glsl
  * @description Plugin entry point to import,
- * inline, (and minify) GLSL/WGSL shader files
+ * inline, (and minify) GLSL/WGSL/Slang shader files
  *
  * @see {@link https://vitejs.dev/guide/api-plugin.html}
  * @link https://github.com/UstymUkhman/vite-plugin-glsl

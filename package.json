@@ -1,6 +1,6 @@
 {
   "name": "vite-plugin-glsl",
-  "description": "Import, inline (and minify) GLSL/WGSL shader files",
+  "description": "Import, inline (and minify) GLSL/WGSL/Slang shader files",
   "homepage": "https://github.com/UstymUkhman/vite-plugin-glsl#readme",
   "packageManager": "^npm@10.8.3",
   "types": "./src/index.d.ts",

@@ -1,5 +1,5 @@
-import Slang from './slang-wasm.js';
 import { minify } from './src/index.js';
+import Slang from './slang-wasm.js';
 
 const error = ({ type, message }) =>
   console.error(`${type} error:`, message);
@@ -8,7 +8,7 @@ const slang = await Slang();
 const globalSession = slang.createGlobalSession();
 
 const target = slang.getCompileTargets().find(
-  // 'GLSL' target is also supported, but output
+  // 'GLSL' target is also supported, but the output
   // version is 4.5, which is not valid on the web.
   ({ name }) => name === 'WGSL'
 )?.value;

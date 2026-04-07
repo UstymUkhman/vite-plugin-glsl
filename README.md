@@ -1,6 +1,6 @@
 # Vite Plugin GLSL #
 
-> Import, inline (and minify) GLSL/WGSL shader files
+> Import, inline (and minify) GLSL/WGSL/Slang shader files
 
 ![npm](https://img.shields.io/npm/dt/vite-plugin-glsl?style=flat-square)
 ![GitHub package.json version](https://img.shields.io/github/package-json/v/UstymUkhman/vite-plugin-glsl?color=brightgreen&style=flat-square)

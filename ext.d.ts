@@ -2,9 +2,9 @@
  * @const
  * @readonly
  * @kind module
- * @description Generic shaders
+ * @description Slang shaders
  */
-declare module '*.glsl' {
+declare module '*.slang' {
   const shader: string;
   export default shader;
 }
@@ -16,6 +16,17 @@ declare module '*.glsl' {
  * @description WebGPU shaders
  */
 declare module '*.wgsl' {
+  const shader: string;
+  export default shader;
+}
+
+/**
+ * @const
+ * @readonly
+ * @kind module
+ * @description Generic shaders
+ */
+declare module '*.glsl' {
   const shader: string;
   export default shader;
 }
