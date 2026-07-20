@@ -114,7 +114,7 @@ function checkDuplicatedImports (path) {
  * @returns {string} Shader's source code without comments
  */
 function removeSourceComments (source, pattern, triple = false) {
-  if (source.includes('/*') && source.includes('*/')) {
+  while (source.includes('/*') && source.includes('*/')) {
     source = source.slice(0, source.indexOf('/*')) +
     source.slice(source.indexOf('*/') + 2, source.length);
   }

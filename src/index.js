@@ -102,7 +102,8 @@ export default async function ({
           .flat().forEach(chunk => this.addWatchFile(chunk));
 
         return await (oxc
-          ? Vite.transformWithOxc(`export default \`${outputShader}\``, shader, { sourcemap })
+          // Use JSON.stringify to escape special characters like ` or ${} in outputShader
+          ? Vite.transformWithOxc(`export default ${JSON.stringify(outputShader)};`, shader, { sourcemap })
           : Vite.transformWithEsbuild(outputShader, shader, {
             sourcemap: sourcemap && 'external',
             loader: 'text', format: 'esm',
