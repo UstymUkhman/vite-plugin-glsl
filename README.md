@@ -251,3 +251,9 @@ vec3 randVec3 (const in vec2 uv) {
   );
 }
 ```
+
+
+## Testing ##
+
+- `npm test`: manual browser check: open the dev server and inspect the transformed shader source text printed on the page.
+- `npm run test:automated`: runs `test/automated` regression tests.
