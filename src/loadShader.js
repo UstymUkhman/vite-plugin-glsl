@@ -110,27 +110,45 @@ function checkDuplicatedImports (path) {
  * @param {string}  source  Shader's source code
  * @param {RegExp}  pattern RegExp to import chunks
  * @param {boolean} triple  Remove triple slash comments
+ * @param {string}  shader  Shader's absolute path
  * 
  * @returns {string} Shader's source code without comments
  */
-function removeSourceComments (source, pattern, triple = false) {
-  while (source.includes('/*') && source.includes('*/')) {
-    source = source.slice(0, source.indexOf('/*')) +
-    source.slice(source.indexOf('*/') + 2, source.length);
-  }
+function removeSourceComments (source, pattern, triple = false, shader) {
+  let output = '';
+  let index = 0;
 
-  const lines = source.split('\n');
+  while (index < source.length) {
+    if (source.startsWith('//', index)) {
+      // Single line comment
+      const nextLine = source.indexOf('\n', index);
+      const lineEnd = nextLine === -1 ? source.length : nextLine;
+      const comment = source.slice(index, lineEnd);
+      const containsImport = comment.search(pattern) !== -1;
 
-  for (let l = lines.length; l--; ) {
-    const index = lines[l].indexOf('//');
+      if (comment.startsWith('///') && !containsImport && !triple) {
+        // Triple backslash comments are retained by default
+        output += comment;
+      }
 
-    if (index > -1) {
-      if (lines[l][index + 2] === '/' && !pattern.test(lines[l]) && !triple) continue;
-      lines[l] = lines[l].slice(0, index);
+      index = lineEnd;
+    } else if (source.startsWith('/*', index)) {
+      // Block comment
+      const commentEnd = source.indexOf('*/', index + 2);
+
+      if (commentEnd === -1) {
+        throw new Error(`Unterminated block comment in "${shader}".`);
+      }
+
+      index = commentEnd + 2;
+    } else {
+      // No comment here
+      output += source[index];
+      index++;
     }
   }
 
-  return lines.join('\n');
+  return output;
 }
 
 /**
@@ -265,7 +283,7 @@ function loadChunks (source, path, pattern, options) {
   if (recursion) return recursiveChunk;
   else if (recursion === null) return '';
 
-  source = removeSourceComments(source, pattern);
+  source = removeSourceComments(source, pattern, false, unixPath);
   let directory = dirname(unixPath);
   allChunks.add(chunkPath);
 
@@ -349,7 +367,7 @@ export default async function (source, shader, options) {
   let outputShader = loadChunks(source, shader, pattern, options);
 
   options.minify && (outputShader = minifyShader(
-    removeSourceComments(outputShader, pattern, true))
+    removeSourceComments(outputShader, pattern, true, shader))
   );
 
   outputShader = await options.onComplete?.(outputShader, shader) ?? outputShader;
