@@ -106,6 +106,9 @@ function checkDuplicatedImports (path) {
  * @name removeSourceComments
  * @description Removes comments from shader source
  * code in order to avoid including commented chunks
+ * Triple-slash comments are meant to be preserved,
+ * but to avoid errors, they will be removed anyway
+ * when containing import keywords or block comments
  * 
  * @param {string}  source  Shader's source code
  * @param {RegExp}  pattern RegExp to import chunks
@@ -114,23 +117,57 @@ function checkDuplicatedImports (path) {
  * @returns {string} Shader's source code without comments
  */
 function removeSourceComments (source, pattern, triple = false) {
-  if (source.includes('/*') && source.includes('*/')) {
-    source = source.slice(0, source.indexOf('/*')) +
-    source.slice(source.indexOf('*/') + 2, source.length);
-  }
-
   const lines = source.split('\n');
+  const comments = /\/\*|\*\//;
 
   for (let l = lines.length; l--; ) {
     const index = lines[l].indexOf('//');
 
     if (index > -1) {
-      if (lines[l][index + 2] === '/' && !pattern.test(lines[l]) && !triple) continue;
+      if (
+        lines[l][index + 2] === '/' &&
+        !comments.test(lines[l]) &&
+        !pattern.test(lines[l]) &&
+        !triple
+      )
+        continue;
+
       lines[l] = lines[l].slice(0, index);
     }
   }
 
-  return lines.join('\n');
+  source = lines.join('\n');
+
+  while (true) {
+    const startBlock = source.indexOf('/*');
+    const endBlock = source.indexOf('*/', startBlock);
+
+    if (startBlock < 0 && endBlock < 0) break;
+
+    else if (startBlock > -1 && endBlock > -1)
+      source = source.slice(0, startBlock) +
+        source.slice(endBlock + 2);
+
+    else {
+      const chunk = source.slice(
+        startBlock * +(endBlock === -1),
+        (startBlock === -1 && endBlock + 2) || void 0
+      );
+
+      const comment = startBlock === -1 && '/*' || '*/';
+      const missing = startBlock === -1 && 'open' || 'clos';
+
+      emitWarning(`Block comment was not ${missing}ed.`, {
+        code: 'vite-plugin-glsl',
+        detail: `Cannot find the corresponding ${missing}ing comment (${comment}) to the one in the` +
+        ` chunk below.\nMake sure it's present and not commented out by a line comment:\n\n${chunk}`
+      });
+
+      break;
+    }
+  }
+
+  return source;
 }
 
 /**
@@ -207,7 +244,7 @@ export function minifyShader (shader, newLine = false) {
 
   return shader.replace(/\\(?:\r\n|\n\r|\n|\r)|\/\*.*?\*\/|\/\/(?:\\(?:\r\n|\n\r|\n|\r)|[^\n\r])*/g, '')
     .split(/\n+/).reduce((result, line) => {
-      line = line.trim().replace(/\s{2,}|\t/, ' ');
+      line = line.trim().replace(/\s{2,}|\t/g, ' ');
 
       if (/@(vertex|fragment|compute)/.test(line) || line.endsWith('return')) line += ' ';
 
@@ -254,7 +291,7 @@ function loadChunks (source, path, pattern, options) {
   const unixPath = path.split(sep).join(posix.sep);
 
   const chunkPath = platform() === 'win32' &&
-    unixPath.toLocaleLowerCase() || unixPath;
+    unixPath.toLowerCase() || unixPath;
 
   const recursion = checkRecursiveImports(
     unixPath, chunkPath,
