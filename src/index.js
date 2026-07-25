@@ -2,7 +2,7 @@
  * @module vite-plugin-glsl
  * @author Ustym Ukhman <ustym.ukhman@gmail.com>
  * @description Import, inline (and minify) GLSL/WGSL/Slang shader files
- * @version 1.6.0
+ * @version 1.6.1
  * @license MIT
  */
 
@@ -102,7 +102,7 @@ export default async function ({
           .flat().forEach(chunk => this.addWatchFile(chunk));
 
         return await (oxc
-          ? Vite.transformWithOxc(`export default \`${outputShader}\``, shader, { sourcemap })
+          ? Vite.transformWithOxc(`export default ${JSON.stringify(outputShader)};`, shader, { sourcemap })
           : Vite.transformWithEsbuild(outputShader, shader, {
             sourcemap: sourcemap && 'external',
             loader: 'text', format: 'esm',

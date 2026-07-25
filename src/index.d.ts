@@ -39,4 +39,4 @@ export default async function ({
  * 
  * @returns {string} Minified shader code
  */
-export type minify = (shader: string) => string;
+export declare function minify(shader: string): string;
