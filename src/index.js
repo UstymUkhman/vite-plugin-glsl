@@ -2,7 +2,7 @@
  * @module vite-plugin-glsl
  * @author Ustym Ukhman <ustym.ukhman@gmail.com>
  * @description Import, inline (and minify) GLSL/WGSL/Slang shader files
- * @version 1.6.1
+ * @version 1.6.2
  * @license MIT
  */
 
