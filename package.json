@@ -37,7 +37,6 @@
   "files": [
     "package.json",
     "README.md",
-    "bun.lock",
     "ext.d.ts",
     "LICENSE",
     "src"
