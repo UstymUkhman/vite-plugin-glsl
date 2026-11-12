@@ -233,15 +233,6 @@ function checkIncludedDependencies (path, root) {
  * @returns {string} Minified shader's source code
  */
 export function minifyShader (shader, newLine = false) {
-  const getAllCharIndexes = (line, char = '-', start = 0) => {
-    const indexes = [];
-
-    while ((start = line.indexOf(char, start)) !== -1)
-      indexes.push(start++);
-
-    return indexes;
-  };
-
   return shader.replace(/\\(?:\r\n|\n\r|\n|\r)|\/\*.*?\*\/|\/\/(?:\\(?:\r\n|\n\r|\n|\r)|[^\n\r])*/g, '')
     .split(/\n+/).reduce((result, line) => {
       line = line.trim().replace(/\s{2,}|\t/g, ' ');
@@ -255,14 +246,16 @@ export function minifyShader (shader, newLine = false) {
       }
 
       else {
-        !line.startsWith('{') && result.length && result[result.length - 1].endsWith('else') && result.push(' ');
-        line = line.replace(/\s*({|}|=|\*|,|\+|\/|>|<|&|\||\[|\]|\(|\)|!|;)\s*/g, '$1');
-        const indexes = getAllCharIndexes(line);
+        const previous = result[result.length - 1] ?? '';
+        !line.startsWith('{') && previous.endsWith('else') && result.push(' ');
 
-        indexes.forEach(index => {
-          if (line[index - 1] === ' ' && line[index - 2] !== '-') line = `${line.slice(0, index - 1)}${line.slice(index--)}`;
-          if (line[index + 1] === ' ' && line[index + 2] !== '-') line = `${line.slice(0, index + 1)}${line.slice(index + 2)}`;
-        });
+        // Keep a space between two lines that would otherwise merge into one token (`vec3` + `v`):
+        /\w$/.test(previous) && /^\w/.test(line) && !previous.endsWith('else') && result.push(' ');
+
+        // Keep the space between two `+` or two `-` (`b + +c`, `z - -1.0`) so they don't become `++`/`--`:
+        line = line.replace(/([+-])\s+(?=\1)/g, '$1\0')
+          .replace(/\s*({|}|=|\*|,|\+|-|\/|>|<|&|\||\[|\]|\(|\)|!|;)\s*/g, '$1')
+          .replace(/\0/g, ' ');
 
         result.push(line);
         newLine = true;
