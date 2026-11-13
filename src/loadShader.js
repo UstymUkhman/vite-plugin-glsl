@@ -246,15 +246,12 @@ export function minifyShader (shader, newLine = false) {
       }
 
       else {
-        const previous = result[result.length - 1] ?? '';
-        !line.startsWith('{') && previous.endsWith('else') && result.push(' ');
+        const prev = result.at(-1) ?? '';
+        !line.startsWith('{') && prev.endsWith('else') && result.push(' ');
+        /\w$/.test(prev) && /^\w/.test(line) && !prev.endsWith('else') && result.push(' ');
 
-        // Keep a space between two lines that would otherwise merge into one token (`vec3` + `v`):
-        /\w$/.test(previous) && /^\w/.test(line) && !previous.endsWith('else') && result.push(' ');
-
-        // Keep the space between two `+` or two `-` (`b + +c`, `z - -1.0`) so they don't become `++`/`--`:
         line = line.replace(/([+-])\s+(?=\1)/g, '$1\0')
-          .replace(/\s*({|}|=|\*|,|\+|-|\/|>|<|&|\||\[|\]|\(|\)|!|;)\s*/g, '$1')
+          .replace(/\s*({|}|=|,|\+|\-|\*|\/|<|>|&|\||\[|\]|\(|\)|!|;)\s*/g, '$1')
           .replace(/\0/g, ' ');
 
         result.push(line);
